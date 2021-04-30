@@ -207,7 +207,8 @@ public class TetrisNode {
 			if (this.rotation > 2) {
 				this.rotation = 1;
 			}
-			
+			if(x+20 > Tetris.toX)x-=20;
+			if(x-10 < Tetris.fromX)x+=10;
 			if (rotation == 1) {
 				this.familyNodes.add(new TetrisNode(x, y + 10));
 				this.familyNodes.add(new TetrisNode(x, y + 20));
@@ -225,7 +226,7 @@ public class TetrisNode {
 			if (this.rotation > 2) {
 				this.rotation = 1;
 			}
-			
+			if(x+20 > Tetris.toX)x-=10;
 			if (rotation == 1) {
 				this.familyNodes.add(new TetrisNode(x + 10, y));
 				this.familyNodes.add(new TetrisNode(x, y + 10));
@@ -243,7 +244,7 @@ public class TetrisNode {
 			if (this.rotation > 2) {
 				this.rotation = 1;
 			}
-			
+			if(x-10 < Tetris.fromX) x += 10;
 			if (rotation == 1) {
 				this.familyNodes.add(new TetrisNode(x, y + 10));
 				this.familyNodes.add(new TetrisNode(x + 10, y + 10));
@@ -267,14 +268,17 @@ public class TetrisNode {
 				this.familyNodes.add(new TetrisNode(x, y + 20));
 				this.familyNodes.add(new TetrisNode(x + 10, y + 20));
 			} else if (rotation == 2){
+				if(x-10 < Tetris.fromX)x+=10;
 				this.familyNodes.add(new TetrisNode(x + 10, y));
 				this.familyNodes.add(new TetrisNode(x - 10, y));
 				this.familyNodes.add(new TetrisNode(x - 10, y + 10));
 			} else if (rotation == 3){
+				if(x-10 < Tetris.fromX)x+=10;
 				this.familyNodes.add(new TetrisNode(x - 10, y));
 				this.familyNodes.add(new TetrisNode(x, y + 10));
 				this.familyNodes.add(new TetrisNode(x, y + 20));
 			} else{
+				if(x-10 < Tetris.fromX)x+=10;
 				this.familyNodes.add(new TetrisNode(x + 10, y));
 				this.familyNodes.add(new TetrisNode(x + 10, y - 10));
 				this.familyNodes.add(new TetrisNode(x - 10, y));
@@ -293,6 +297,7 @@ public class TetrisNode {
 				this.familyNodes.add(new TetrisNode(x, y + 20));
 				this.familyNodes.add(new TetrisNode(x - 10, y + 20));
 			} else if (rotation == 2){
+				if(x+20 > Tetris.toX)x-=20;
 				this.familyNodes.add(new TetrisNode(x, y + 10));
 				this.familyNodes.add(new TetrisNode(x + 10, y + 10));
 				this.familyNodes.add(new TetrisNode(x + 20, y + 10));
@@ -301,6 +306,7 @@ public class TetrisNode {
 				this.familyNodes.add(new TetrisNode(x, y - 10));
 				this.familyNodes.add(new TetrisNode(x + 10, y - 10));
 			} else{
+				if(x-10 < Tetris.fromX)x+=10;
 				this.familyNodes.add(new TetrisNode(x + 10, y));
 				this.familyNodes.add(new TetrisNode(x - 10, y));
 				this.familyNodes.add(new TetrisNode(x + 10, y + 10));
@@ -315,18 +321,24 @@ public class TetrisNode {
 			}
 			
 			if (rotation == 1) {
+				if(x+10 > Tetris.toX)x-=10;
+				if(x-10 < Tetris.fromX)x+=10;
 				this.familyNodes.add(new TetrisNode(x + 10, y));
 				this.familyNodes.add(new TetrisNode(x - 10, y));
 				this.familyNodes.add(new TetrisNode(x, y + 10));
 			} else if (rotation == 2){
+				if(x-10 < Tetris.fromX)x+=10;
 				this.familyNodes.add(new TetrisNode(x, y + 10));
 				this.familyNodes.add(new TetrisNode(x, y - 10));
 				this.familyNodes.add(new TetrisNode(x - 10, y));
 			} else if (rotation == 3){
+				if(x+20 > Tetris.toX)x-=10;
+				if(x-10 < Tetris.fromX)x+=10;
 				this.familyNodes.add(new TetrisNode(x, y - 10));
 				this.familyNodes.add(new TetrisNode(x + 10, y));
 				this.familyNodes.add(new TetrisNode(x - 10, y));
 			} else{
+				if(x+10 > Tetris.toX)x-=10;
 				this.familyNodes.add(new TetrisNode(x + 10, y));
 				this.familyNodes.add(new TetrisNode(x, y + 10));
 				this.familyNodes.add(new TetrisNode(x, y - 10));
