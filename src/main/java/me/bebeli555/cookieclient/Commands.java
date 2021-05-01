@@ -32,8 +32,8 @@ public class Commands extends Mod {
 		if (message.startsWith(prefix)) {
 			e.setCanceled(true);
 			mc.ingameGUI.getChatGUI().addToSentMessages(messageReal);
-			message = message.replace(prefix, "");
-			
+			message = message.substring(prefix.length());
+
 			//Open gui command
 			if (message.equals("gui")) {
 				openGui = true;
