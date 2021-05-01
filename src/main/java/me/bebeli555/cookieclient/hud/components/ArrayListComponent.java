@@ -27,7 +27,9 @@ public class ArrayListComponent extends HudComponent {
 			while (!arraylist.isEmpty()) {
 				Mod best = null;
 				int longest = Integer.MIN_VALUE;
-				for (Mod module : arraylist) {
+				ArrayList<Mod> temp2 = new ArrayList<Mod>();
+				temp2.addAll(arraylist);
+				for (Mod module : temp2) {
 					String name = module.name;
 					if (module.getRenderNumber() != -1) {
 						name += " [" + module.getRenderNumber() + "]";
@@ -52,8 +54,10 @@ public class ArrayListComponent extends HudComponent {
 		rainbow.onUpdate();
 		
 		int amount = 0;
-		for (Mod module : arraylist) {
-			if (module.toggled && !module.isHidden()) {
+		ArrayList<Mod> temp = new ArrayList<Mod>();
+		temp.addAll(arraylist);
+		for (Mod module : temp) {
+			if (module.isOn() && !module.isHidden()) {
 				String text = module.name;
 				if (module.getRenderNumber() != -1) {
 					text += " " + g + "[" + w + module.getRenderNumber() + g + "]";

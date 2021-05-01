@@ -8,6 +8,9 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import me.bebeli555.cookieclient.Mod;
 import me.bebeli555.cookieclient.gui.Group;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -55,8 +58,18 @@ public class UpdateChecker extends Mod {
 	public void onTick(ClientTickEvent e) {
 		if (mc.player != null) {
 			if (newVersion != null && !newVersion.equals(VERSION)) {
-				sendMessage("New version of " + ChatFormatting.GREEN + NAME + ChatFormatting.WHITE + " is available! Download it from " + ChatFormatting.GREEN + "https://github.com/bebeli555/CookieClient "
-				+ ChatFormatting.WHITE + "New Version: " + ChatFormatting.GREEN + newVersion + ChatFormatting.WHITE + " Your version: " + ChatFormatting.GREEN + VERSION, false);
+				String link = "https://github.com/bebeli555/CookieClient/releases/v" + newVersion;
+				
+				ITextComponent[] messages = {
+						new TextComponentString(ChatFormatting.YELLOW + "New version of " + ChatFormatting.GREEN + NAME + ChatFormatting.YELLOW + " is available!"),
+						new TextComponentString(ChatFormatting.YELLOW + "New version: " + ChatFormatting.GREEN + newVersion + ChatFormatting.YELLOW+ " Your version: " + ChatFormatting.GREEN + VERSION),
+						new TextComponentString(ChatFormatting.YELLOW + "Download it from " + ChatFormatting.AQUA + "" + ChatFormatting.UNDERLINE + "Github")
+				};
+				
+				for (ITextComponent message : messages) {
+					message.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, link));
+					mc.player.sendMessage(message);
+				}
 			}
 			
 	        MinecraftForge.EVENT_BUS.unregister(instance);

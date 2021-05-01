@@ -31,7 +31,7 @@ public class GuiSettings extends Mod {
 		public static Setting width = new Setting(guiSettings, Mode.INTEGER, "Width", 90, "Gui node width");
 		public static Setting height = new Setting(guiSettings, Mode.INTEGER, "Height", 17, "Gui node height");
 		public static Setting borderColor = new Setting(guiSettings, Mode.TEXT, "Border color", "0xFF32a86d", "Color of the border in hex and with 0xAA");
-		public static Setting borderSize = new Setting(guiSettings, Mode.DOUBLE, "Border size", 0.3, "The size of the border in the node");
+		public static Setting borderSize = new Setting(guiSettings, Mode.DOUBLE, "Border size", 0, "The size of the border in the node");
 		public static Setting backgroundColor = new Setting(guiSettings, Mode.TEXT, "Color", "0x36325bc2", "The background color");
 		public static Setting textColor = new Setting(guiSettings, Mode.TEXT, "Text Color", "0xFF00ff00", "Text color when module is toggled on");
 		public static Setting textColorOff = new Setting(guiSettings, Mode.TEXT, "Text Color Off", "0xFFff0000", "Text color when module is toggled off");

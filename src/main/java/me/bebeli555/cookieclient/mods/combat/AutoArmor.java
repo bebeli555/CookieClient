@@ -39,7 +39,7 @@ public class AutoArmor extends Mod {
 	}
 	
 	public void loop() {
-		if (mc.player == null) {
+		if (mc.player == null || AutoTotem.isContainerOpen()) {
 			return;
 		}
 		

@@ -21,13 +21,13 @@ public class ReconnectButton extends GuiButton {
         super.drawButton(mc, mouseX, mouseY, partialTicks);
         
         if (visible) {
-        	if (AutoReconnect.module.toggled) {
+        	if (AutoReconnect.module.isOn()) {
         		this.displayString = "AutoReconnect: " + CoordsComponent.decimal((Math.abs(timer.ms + (long)AutoReconnect.delay.doubleValue() * 1000) - System.currentTimeMillis()) / (double)1000, 1);
         	} else {
         		this.displayString = "AutoReconnect";
         	}
 
-            if (AutoReconnect.module.toggled && timer.hasPassed((int)(AutoReconnect.delay.doubleValue() * 1000)) && !InformationUtil.lastIp.isEmpty() && InformationUtil.lastPort != -1) {
+            if (AutoReconnect.module.isOn() && timer.hasPassed((int)(AutoReconnect.delay.doubleValue() * 1000)) && !InformationUtil.lastIp.isEmpty() && InformationUtil.lastPort != -1) {
                 mc.displayGuiScreen(new GuiConnecting(null, mc, InformationUtil.lastIp, InformationUtil.lastPort));
             }
         }

@@ -15,6 +15,8 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import me.bebeli555.cookieclient.Commands;
 import me.bebeli555.cookieclient.Mod;
+import me.bebeli555.cookieclient.mods.games.Snake;
+import me.bebeli555.cookieclient.mods.games.tetris.Tetris;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
@@ -52,7 +54,7 @@ public class Gui extends GuiScreen {
 	}
 	
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {		
 		//Scale the gui to match the resolution and the gui scale.
 		Dimension resolution = Toolkit.getDefaultToolkit().getScreenSize();
 		GlStateManager.pushMatrix();
@@ -65,7 +67,10 @@ public class Gui extends GuiScreen {
 		
 		GlStateManager.scale(guiScale, guiScale, guiScale);
 		
-		this.drawDefaultBackground();
+		//Draw background
+		drawRect(0, 0, 2000, 2000, 0x99000000);
+		drawRect(0, 0, 2000, 2000, 0x45000000);
+		
 		visibleNodes.clear();
 		description = null;
 		
@@ -226,7 +231,7 @@ public class Gui extends GuiScreen {
 		}
 		
 		for (Mod module : Mod.modules) {
-			if (module.toggled) {
+			if (module.isOn()) {
 				module.onGuiDrawScreen(mouseX, mouseY, partialTicks);
 			}
 		}
@@ -371,7 +376,7 @@ public class Gui extends GuiScreen {
 		y = lastMouseY;
 		
 		for (Mod module : Mod.modules) {
-			if (module.toggled) {
+			if (module.isOn()) {
 				if (module.onGuiClick(x, y, button)) {
 					return;
 				}
@@ -513,7 +518,7 @@ public class Gui extends GuiScreen {
 		}
 		
 		for (Mod module : Mod.modules) {
-			if (module.toggled) {
+			if (module.isOn()) {
 				module.onGuiKeyPress(e);
 			}
 		}
@@ -594,6 +599,8 @@ public class Gui extends GuiScreen {
 			pasting = false;
 			dragging = null;
 			description = null;
+			Tetris.instance.disable();
+			Snake.instance.disable();
 			MinecraftForge.EVENT_BUS.unregister(gui);
 		}
 	}

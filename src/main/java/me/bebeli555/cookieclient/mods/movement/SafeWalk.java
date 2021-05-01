@@ -7,8 +7,11 @@ import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
 
 public class SafeWalk extends Mod {
+	public static SafeWalk instance;
+	
 	public SafeWalk() {
 		super(Group.MOVEMENT, "SafeWalk", "Stops you from walking off ledges", "Acts like u would be sneaking");
+		instance = this;
 	}
 	
     @EventHandler

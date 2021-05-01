@@ -43,7 +43,7 @@ public class Renderer extends Mod {
 		}
 		
 		//Render HUD. Design inspired by Future client
-		if (!HudEditor.module.toggled) {
+		if (!HudEditor.module.isOn()) {
 			if (!GuiSettings.hud.booleanValue()) return;
 			GlStateManager.pushMatrix();
 			double guiScale = Gui.getGuiScale(1);
@@ -92,7 +92,7 @@ public class Renderer extends Mod {
 		}
 		
 		for (Mod module : Mod.modules) {
-			if (module.toggled) {
+			if (module.isOn()) {
 				module.onRenderWorld(event.getPartialTicks());
 			}
 		}

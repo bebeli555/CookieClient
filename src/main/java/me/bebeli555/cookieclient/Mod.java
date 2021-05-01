@@ -2,6 +2,8 @@ package me.bebeli555.cookieclient;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.function.BooleanSupplier;
 
@@ -27,12 +29,14 @@ import me.bebeli555.cookieclient.mods.combat.Criticals;
 import me.bebeli555.cookieclient.mods.combat.HoleFiller;
 import me.bebeli555.cookieclient.mods.combat.KillAura;
 import me.bebeli555.cookieclient.mods.combat.NoKnockback;
+import me.bebeli555.cookieclient.mods.combat.Offhand;
 import me.bebeli555.cookieclient.mods.combat.SelfWeb;
 import me.bebeli555.cookieclient.mods.combat.Surround;
 import me.bebeli555.cookieclient.mods.exploits.Burrow;
 import me.bebeli555.cookieclient.mods.exploits.MiningSpoof;
 import me.bebeli555.cookieclient.mods.exploits.NewChunks;
 import me.bebeli555.cookieclient.mods.exploits.PacketFly;
+import me.bebeli555.cookieclient.mods.exploits.PortalGodMode;
 import me.bebeli555.cookieclient.mods.exploits.Reach;
 import me.bebeli555.cookieclient.mods.games.Snake;
 import me.bebeli555.cookieclient.mods.games.tetris.Tetris;
@@ -65,6 +69,7 @@ import me.bebeli555.cookieclient.mods.movement.HighJump;
 import me.bebeli555.cookieclient.mods.movement.IceSpeed;
 import me.bebeli555.cookieclient.mods.movement.InventoryMove;
 import me.bebeli555.cookieclient.mods.movement.Jesus;
+import me.bebeli555.cookieclient.mods.movement.LiquidSpeed;
 import me.bebeli555.cookieclient.mods.movement.NoFall;
 import me.bebeli555.cookieclient.mods.movement.NoRotate;
 import me.bebeli555.cookieclient.mods.movement.NoSlowDown;
@@ -92,6 +97,7 @@ import me.bebeli555.cookieclient.mods.render.Zoom;
 import me.bebeli555.cookieclient.mods.world.AutoBuilder;
 import me.bebeli555.cookieclient.mods.world.AutoEnderChestMiner;
 import me.bebeli555.cookieclient.mods.world.AutoFish;
+import me.bebeli555.cookieclient.mods.world.AutoTool;
 import me.bebeli555.cookieclient.mods.world.CrystalBlock;
 import me.bebeli555.cookieclient.mods.world.FastUse;
 import me.bebeli555.cookieclient.mods.world.NoEntityTrace;
@@ -122,7 +128,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 public class Mod {
     public static final String MODID = "cookieclient";
     public static final String NAME = "CookieClient";
-    public static final String VERSION = "1.0-beta";
+    public static final String VERSION = "1.01-beta";
     public static final String DISCORD = "discord.gg/xSukBcyd8m";
     
     public static Minecraft mc = Minecraft.getMinecraft();
@@ -131,9 +137,10 @@ public class Mod {
     public String name = "";
     public String[] description;
     public Group group;
-    public boolean toggled, defaultOn, defaultHidden;
+    private boolean toggled, hiddenOn, lastHiddenOn;
+    public boolean defaultOn, defaultHidden;
     public boolean autoSubscribe = true;
-    private GuiNode guiNode;
+    private GuiNode guiNode, hiddenNode;
     private int renderNumber = -1;
     public static ArrayList<Mod> modules = new ArrayList<Mod>();
     
@@ -200,6 +207,7 @@ public class Mod {
     	new NoKnockback();
     	new SelfWeb();
     	new Surround();
+    	new Offhand();
     	
     	//Exploits
     	new Burrow();
@@ -207,6 +215,7 @@ public class Mod {
     	new NewChunks();
     	new PacketFly();
     	new Reach();
+    	new PortalGodMode();
 		
     	//Misc
     	new AntiAFK();
@@ -247,6 +256,7 @@ public class Mod {
     	new Speed();
     	new Step();
     	new Strafe();
+    	new LiquidSpeed();
 		
     	//Render
     	new AutoTrapIndicator();
@@ -279,6 +289,7 @@ public class Mod {
     	new Scaffold();
     	new SpeedMine();
     	new Timer();
+    	new AutoTool();
 		
     	//Games
 		new Snake();
@@ -287,7 +298,29 @@ public class Mod {
     	//Bots
     	new ElytraBot();
     	new ObbyBuilderBot();
-    	
+		
+		//Sort the modules list from A to Z
+		List<String> names = new ArrayList<String>();
+		for (Mod module : modules) {
+			names.add(module.name);
+		}
+		
+		String[] sortedNames = new String[names.size()];
+		sortedNames = names.toArray(sortedNames);
+		Arrays.sort(sortedNames);
+		
+		ArrayList<Mod> temp = new ArrayList<Mod>();
+		for (String name : sortedNames) {
+			for (Mod module : modules) {
+				if (module.name.equals(name)) {
+					temp.add(module);
+					break;
+				}
+			}
+		}
+		
+		modules = temp;
+		
     	//Gui
     	new HudEditor();
 		new GuiSettings();
@@ -367,6 +400,32 @@ public class Mod {
     	}
     }
     
+    /**
+     * Sets the module on but doesnt show it in gui or arraylist or anything
+     * This can be used by other modules to turn this module on
+     */
+    public void setHiddenOn(boolean value) {
+    	hiddenOn = value;
+    	
+    	if (hiddenOn != lastHiddenOn) {	
+    		if (hiddenOn) {
+            	if (autoSubscribe) {
+            		MinecraftForge.EVENT_BUS.register(this);
+            		Mod.EVENT_BUS.subscribe(this);
+            	}	
+        		onEnabled();
+    		} else {
+            	if (autoSubscribe) {
+            		MinecraftForge.EVENT_BUS.unregister(this);
+            		Mod.EVENT_BUS.unsubscribe(this);
+            	}
+        		onDisabled();
+    		}
+    	}
+    	
+    	lastHiddenOn = hiddenOn;
+    }
+    
     public GuiNode getGuiNode() {
     	if (guiNode == null) {
     		guiNode = Settings.getGuiNodeFromId(name);
@@ -377,7 +436,19 @@ public class Mod {
     }
     
     public boolean isHidden() {
-    	return Settings.getGuiNodeFromId(name + "Hidden").toggled;
+    	if (hiddenOn) {
+    		return true;
+    	}
+    	
+    	if (hiddenNode == null) {
+        	hiddenNode = Settings.getGuiNodeFromId(name + "Hidden");
+    	}
+    	
+    	return hiddenNode.toggled;
+    }
+    
+    public boolean isOn() {
+    	return toggled;
     }
     
     public static void toggleMod(String name, boolean on) {

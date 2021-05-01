@@ -57,21 +57,22 @@ public class AutoCrystal extends Mod {
     private int remainingTicks;
 	private BlockPos placePos, breakPos;
     private Timer lastPlaceOrBreak = new Timer();
+    private Timer checkPlacedTimer = new Timer();
 	private boolean rotating;
     
 	public static Setting players = new Setting(Mode.BOOLEAN, "Players", true, "Attacks players but not friends");
 	public static Setting monsters = new Setting(Mode.BOOLEAN, "Monsters", false, "Attacks monsters");
 	public static Setting neutrals = new Setting(Mode.BOOLEAN, "Neutrals", false, "Attacks neutral entities like enderman");
 	public static Setting passive = new Setting(Mode.BOOLEAN, "Passive", false, "Attacks passive entities like animals");
-    public static Setting breakMode = new Setting(null, "BreakMode", "Always", new String[]{"Allways"}, new String[]{"Smart"}, new String[]{"OnlyOwn"});
+    public static Setting breakMode = new Setting(null, "BreakMode", "OnlyOwn", new String[]{"Allways"}, new String[]{"Smart"}, new String[]{"OnlyOwn"});
     public static Setting placeRadius = new Setting(Mode.DOUBLE, "PlaceRadius", 5.5, "Radius for placing");
     public static Setting breakRadius = new Setting(Mode.DOUBLE, "BreakRadius", 5.5, "Radius for breaking");
     public static Setting wallsRange = new Setting(Mode.DOUBLE, "WallsRange", 3.5, "Max distance through walls");
     public static Setting multiPlace = new Setting(Mode.BOOLEAN, "MultiPlace", false, "Tries to multiplace");
     public static Setting ticks = new Setting(Mode.INTEGER, "Ticks", 2, "The number of ticks to ignore on client update");
-    public static Setting minDmg = new Setting(Mode.DOUBLE, "MinDMG", 5, "Minimum damage to do to your opponent");
-    public static Setting maxSelfDmg = new Setting(Mode.DOUBLE, "MaxSelfDMG", 10, "Max self damage allowed");
-    public static Setting facePlace = new Setting(Mode.DOUBLE, "FacePlace", 8, "Required target health for faceplacing");
+    public static Setting minDmg = new Setting(Mode.DOUBLE, "MinDMG", 6, "Minimum damage to do to your opponent");
+    public static Setting maxSelfDmg = new Setting(Mode.DOUBLE, "MaxSelfDMG", 13, "Max self damage allowed");
+    public static Setting facePlace = new Setting(Mode.DOUBLE, "FacePlace", 9, "Required target health for faceplacing");
     public static Setting autoSwitch = new Setting(Mode.BOOLEAN, "AutoSwitch", true, "Automatically switches to crystals in your hotbar");
     public static Setting pauseIfHittingBlock = new Setting(Mode.BOOLEAN, "PauseIfHittingBlock", false, "Pauses when your hitting a block with a pickaxe");
     public static Setting pauseWhileEating = new Setting(Mode.BOOLEAN, "PauseWhileEating", false, "Pauses while eating");
@@ -88,7 +89,6 @@ public class AutoCrystal extends Mod {
     
     @Override
     public void onEnabled() {
-        placedCrystals.clear();
         remainingTicks = 0;
         lastPlaceOrBreak.reset();
         rotating = false;
@@ -98,6 +98,7 @@ public class AutoCrystal extends Mod {
     public void onDisabled() {
     	placePos = null;
     	breakPos = null;
+    	placedCrystals.clear();
     	RotationUtil.stopRotating();
     }
     
@@ -122,7 +123,7 @@ public class AutoCrystal extends Mod {
         }
         
         if (breakMode.stringValue().equals("OnlyOwn")) {
-        	return e.getDistance(e.posX, e.posY, e.posZ) <= 3;
+        	return placedCrystals.contains(e.getPosition().add(0, -1, 0));
         } else if (breakMode.stringValue().equals("Smart")) {
             float selfDamage = CrystalUtil.calculateDamage(new Vec3d(e.posX, e.posY, e.posZ), mc.player);
             if (selfDamage > maxSelfDmg.doubleValue() || noSuicide.booleanValue() && selfDamage >= mc.player.getHealth() + mc.player.getAbsorptionAmount()) {
@@ -207,6 +208,19 @@ public class AutoCrystal extends Mod {
     		return;
     	}
     	
+    	//Remove placed crystal spots if we are far away or there is no crystal there anymore
+    	if (checkPlacedTimer.hasPassed(1000)) {
+    		ArrayList<BlockPos> temp = new ArrayList<BlockPos>();
+    		temp.addAll(placedCrystals);
+    		for (BlockPos pos : temp) {
+    			if (CrystalUtil.getCrystalInPos(pos) == null || BlockUtil.distance(getPlayerPos(), pos) > 15) {
+    				placedCrystals.remove(pos);
+    			}
+    		}
+    		
+    		checkPlacedTimer.reset();
+    	}
+    	
     	//Stop rotating if we havent destroyed or placed any crystals recently
     	if (rotating && lastPlaceOrBreak.hasPassed(500)) {
     		rotating = false;
@@ -218,10 +232,6 @@ public class AutoCrystal extends Mod {
         //This is our 1 second timer to remove our attackedEnderCrystals list, and remove the first placedCrystal for the visualizer.
         if (removeVisualTimer.hasPassed(1000)) {
             removeVisualTimer.reset();
-            if (!placedCrystals.isEmpty()) {
-                placedCrystals.remove(0);
-            }
-            
             attackedCrystals.clear();
         }
         
@@ -255,7 +265,7 @@ public class AutoCrystal extends Mod {
             	}
             	
                 //Ignore if the player is us, dead, or has no health (the dead variable is sometimes delayed)
-                if (entity == mc.player || mc.player.isDead || (mc.player.getHealth() + mc.player.getAbsorptionAmount()) <= 0.0f) {
+                if (entity.equals(mc.player) || entity.isDead || (entity.getHealth() + entity.getAbsorptionAmount()) <= 0.0f) {
                     continue;
                 }
                 
@@ -380,17 +390,7 @@ public class AutoCrystal extends Mod {
         }
         
         //Verify the placeTimer is ready, selectedPosition is not 0,0,0 and the event isn't already cancelled
-        if (!placeLocations.isEmpty()) {
-            //If player is not holding crystals switch to them or return if autoswitch is off
-            if (mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL && mc.player.getHeldItemOffhand().getItem() != Items.END_CRYSTAL) {
-                if (autoSwitch.booleanValue() && InventoryUtil.hasItem(Items.END_CRYSTAL)) {
-            		InventoryUtil.switchItem(InventoryUtil.getSlot(Items.END_CRYSTAL), false);
-                    mc.playerController.updateController();
-                } else {
-                	return;
-                }
-            }
-            
+        if (!placeLocations.isEmpty()) {            
             //Iterate through available place locations
             BlockPos selectedPos = null;
             for (BlockPos pos : placeLocations) {
@@ -405,6 +405,16 @@ public class AutoCrystal extends Mod {
             if (selectedPos == null) {
                 remainingTicks = 0;
                 return;
+            }
+            
+            //If player is not holding crystals switch to them or return if autoswitch is off
+            if (mc.player.getHeldItemMainhand().getItem() != Items.END_CRYSTAL && mc.player.getHeldItemOffhand().getItem() != Items.END_CRYSTAL) {
+                if (autoSwitch.booleanValue() && InventoryUtil.hasItem(Items.END_CRYSTAL)) {
+            		InventoryUtil.switchItem(InventoryUtil.getSlot(Items.END_CRYSTAL), false);
+                    mc.playerController.updateController();
+                } else {
+                	return;
+                }
             }
             
             //Rotate to block where its gonna place it
@@ -422,20 +432,13 @@ public class AutoCrystal extends Mod {
                 facing = result.sideHit;
             }
             
+            //Place crystal
             placePos = selectedPos;
             breakPos = null;
             lastPlaceOrBreak.reset();
             mc.getConnection().sendPacket(new CPacketPlayerTryUseItemOnBlock(selectedPos, facing, mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, 0, 0, 0));
             
-            //If placedcrystals already contains this position, remove it because we need to have it at the back of the list
-            if (placedCrystals.contains(selectedPos)) {
-                placedCrystals.remove(selectedPos);
-            }
-            
-            //Adds the selectedPos to the back of the placed crystals list
             placedCrystals.add(selectedPos);
-            
-            //Reset the placed location, we just placed there
             placeLocations.clear();
         }
     }
@@ -459,11 +462,16 @@ public class AutoCrystal extends Mod {
                             e.setDead();
                         }
                     }
-                    
-                    //Remove all crystals within 6 blocks from the placed crystals list
-                    placedCrystals.removeIf(p_Pos -> p_Pos.getDistance((int)packet.getX(), (int)packet.getY(), (int)packet.getZ()) <= 6.0);
                 });
             }
+        } else if (event.packet instanceof CPacketPlayerTryUseItemOnBlock && mc.player != null) {
+        	//Add this position to placed crystals if the player manually placed a crystal
+        	CPacketPlayerTryUseItemOnBlock packet = (CPacketPlayerTryUseItemOnBlock)event.packet;
+        	if (mc.player.getHeldItemMainhand().getItem() == Items.END_CRYSTAL || mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL) {
+        		if (mc.gameSettings.keyBindUseItem.isKeyDown()) {
+        			placedCrystals.add(packet.getPos());
+        		}
+        	}
         }
     });
     

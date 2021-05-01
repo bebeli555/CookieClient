@@ -16,6 +16,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraftforge.client.event.GuiScreenEvent;
 
 public class Snake extends Mod {
+	public static Snake instance;
 	public static ArrayList<Integer> bodyX = new ArrayList<Integer>();
 	public static ArrayList<Integer> bodyY = new ArrayList<Integer>();
 	public static int snakeSize = 0;
@@ -34,6 +35,7 @@ public class Snake extends Mod {
 	
 	public Snake() {
 		super(Group.GAMES, "Snake", "Snake game");
+		instance = this;
 	}
 	
 	@Override

@@ -25,7 +25,7 @@ public class LagNotifierComponent extends HudComponent {
 	public void onRender(float partialTicks) {
 		super.onRender(partialTicks);
 		
-		if (lastServerPacket != -1 && Math.abs(System.currentTimeMillis() - lastServerPacket) > 3500 && !mc.isSingleplayer() || HudEditor.module.toggled) {
+		if (lastServerPacket != -1 && Math.abs(System.currentTimeMillis() - lastServerPacket) > 3500 && !mc.isSingleplayer() || HudEditor.module.isOn()) {
 			String seconds = decimal((double)Math.abs(System.currentTimeMillis() - lastServerPacket) / (double)1000, 1);
 			String text = g + "Server not responding " + w + seconds + "s";
 			drawString(text, mc.displayWidth / 4 - mc.fontRenderer.getStringWidth(text) / 2, 2, -1, true);

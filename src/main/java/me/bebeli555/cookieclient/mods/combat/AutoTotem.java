@@ -5,20 +5,31 @@ import me.bebeli555.cookieclient.events.player.PlayerMoveEvent;
 import me.bebeli555.cookieclient.gui.Group;
 import me.bebeli555.cookieclient.gui.Mode;
 import me.bebeli555.cookieclient.gui.Setting;
+import me.bebeli555.cookieclient.hud.components.ArrayListComponent;
 import me.bebeli555.cookieclient.utils.InventoryUtil;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiShulkerBox;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 public class AutoTotem extends Mod {
+	public static AutoTotem instance;
+	private int lastNumber;
+	
 	public static Setting stopMovement = new Setting(Mode.BOOLEAN, "StopMovement", false, "Stops ur motion when its trying to replace the totem", "Because some servers like 2b2t will not", "Allow u to click the totem if ur moving");
 	
 	public AutoTotem() {
 		super(Group.COMBAT, "AutoTotem", "Keeps a totem in ur offhand");
+		instance = this;
+	}
+	
+	@Override
+	public void onEnabled() {
+		lastNumber = -1;
 	}
 	
 	@SubscribeEvent
@@ -27,13 +38,18 @@ public class AutoTotem extends Mod {
 			return;
 		}
 		
-		if (mc.player.getHeldItemOffhand().getItem() != Items.TOTEM_OF_UNDYING && InventoryUtil.hasItem(Items.TOTEM_OF_UNDYING) && !(mc.currentScreen instanceof GuiChest) && !(mc.currentScreen instanceof GuiShulkerBox)) {
+		if (mc.player.getHeldItemOffhand().getItem() != Items.TOTEM_OF_UNDYING && InventoryUtil.hasItem(Items.TOTEM_OF_UNDYING) && !isContainerOpen()) {
 			if (stopMovement.booleanValue()) {
 				NoMovement.toggle(true);
 			}
 			
-			InventoryUtil.clickSlot(InventoryUtil.getSlot(Items.TOTEM_OF_UNDYING));
+			Item oldItem = mc.player.getHeldItemOffhand().getItem();
+			int slot = InventoryUtil.getSlot(Items.TOTEM_OF_UNDYING);
+			InventoryUtil.clickSlot(slot);
 			InventoryUtil.clickSlot(45);
+			if (oldItem != Items.AIR) {
+				InventoryUtil.clickSlot(slot);
+			}
 		} else {
 			NoMovement.toggle(false);
 		}
@@ -42,7 +58,27 @@ public class AutoTotem extends Mod {
 		if (mc.player.getHeldItemOffhand().getItem() == Items.TOTEM_OF_UNDYING) {
 			this.setRenderNumber(this.getRenderNumber() + 1);
 		}
+		
+		if (this.getRenderNumber() != lastNumber) {
+			//Update arraylist sorting
+			ArrayListComponent.lastArraylistSize = -1;
+		}
+		
+		lastNumber = this.getRenderNumber();
 	}
+	
+	/**
+	 * Checks if a container is open that is also open server side
+	 * Like chest or a shulker box
+	 */
+	public static boolean isContainerOpen() {
+		if (mc.currentScreen != null) {
+			return mc.currentScreen instanceof GuiChest || mc.currentScreen instanceof GuiShulkerBox;
+		}
+		
+		return false;
+	}
+	
 	
 	//Cancels all movement
 	public static class NoMovement {

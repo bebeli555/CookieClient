@@ -17,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.GuiScreenEvent;
 
 public class Tetris extends Mod {
+	public static Tetris instance;
 	public static int fromX, toX;
 	public static int fromY, toY;
 	public static TetrisNode currentNode;
@@ -28,6 +29,7 @@ public class Tetris extends Mod {
 	
 	public Tetris() {
 		super(Group.GAMES, "Tetris", "Tetris game");
+		instance = this;
 	}
 	
 	@Override

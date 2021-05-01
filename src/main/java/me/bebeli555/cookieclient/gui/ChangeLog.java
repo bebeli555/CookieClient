@@ -12,6 +12,16 @@ public class ChangeLog extends Mod {
 	
 	public static String[] getChangeLog() {
 		String[] changelog = {
+				"version: v1.01-beta",
+				"- Added PortalGodMode",
+				"- Added LiquidSpeed",
+				"- Added AutoTool",
+				"- Added Offhand",
+				"- Improved Scaffold",
+				"- Nametags now ignore dead people",
+				"- Fixed OnlyOwn breakmode in AutoCrystal",
+				"- Other stuff",
+				"",
 				"version: v1.0-beta",
 				"- Beta release!"
 		};

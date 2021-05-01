@@ -47,7 +47,7 @@ public class KillAura extends Mod {
 	public static Setting passive = new Setting(Mode.BOOLEAN, "Passive", false, "Attacks passive entities like animals");
 	public static Setting pauseIfCrystal = new Setting(Mode.BOOLEAN, "PauseIfCrystal", false, "Pauses killaura if ur holding an end crystal");
 	public static Setting pauseIfGap = new Setting(Mode.BOOLEAN, "PauseIfGap", true, "Pauses killaura if ur holding a gapple");
-	public static Setting tpsSync = new Setting(Mode.BOOLEAN, "TPSSync", false, "Syncs attack delay with tps");
+	public static Setting tpsSync = new Setting(Mode.BOOLEAN, "TPSSync", true, "Syncs attack delay with tps");
 	
 	public KillAura() {
 		super(Group.COMBAT, "KillAura", "Attacks nearby targets automatically");

@@ -21,7 +21,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-version = "1.0-beta"
+version = "1.01-beta"
 group = "me.bebeli555.cookieclient"
 archivesBaseName = "CookieClient"
 

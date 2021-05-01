@@ -71,7 +71,7 @@ public class Setting {
 			this.value = value;
 			
 			for (ValueChangedListener listener : listeners) {
-				if (!listener.onlyIfModuleIsOn || listener.module.toggled) {
+				if (!listener.onlyIfModuleIsOn || listener.module.isOn()) {
 					listener.valueChanged();
 				}
 			}

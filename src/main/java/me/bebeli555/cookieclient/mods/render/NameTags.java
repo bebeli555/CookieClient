@@ -67,7 +67,7 @@ public class NameTags extends Mod {
 	}
     
 	public void renderNameTag(EntityPlayer player, float partialTicks) {	
-		if (mc.getRenderManager().options == null) {
+		if (mc.getRenderManager().options == null || player.isDead || player.getHealth() + player.getAbsorptionAmount() == 0) {
 			return;
 		}
 		

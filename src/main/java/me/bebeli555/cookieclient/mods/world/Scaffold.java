@@ -6,6 +6,7 @@ import me.bebeli555.cookieclient.events.player.TravelEvent;
 import me.bebeli555.cookieclient.gui.Group;
 import me.bebeli555.cookieclient.gui.Mode;
 import me.bebeli555.cookieclient.gui.Setting;
+import me.bebeli555.cookieclient.mods.movement.SafeWalk;
 import me.bebeli555.cookieclient.utils.BlockUtil;
 import me.bebeli555.cookieclient.utils.InventoryUtil;
 import me.bebeli555.cookieclient.utils.InventoryUtil.ItemStackUtil;
@@ -21,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketConfirmTeleport;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
@@ -28,7 +30,9 @@ public class Scaffold extends Mod {
 	private static Timer towerTimer = new Timer();
 	private static int counter, counter2;
 	
+	public static Setting safeWalk = new Setting(Mode.BOOLEAN, "UseSafeWalk", true, "Uses safewalk module so you dont fall off");
 	public static Setting tower = new Setting(Mode.BOOLEAN, "Tower", true, "Bridge up fast");
+		public static Setting towerWait = new Setting(tower, Mode.INTEGER, "Wait", 500, "How long to wait after the server rubberbands you in ms");
 	public static Setting delay = new Setting(Mode.INTEGER, "Delay", 3, "Delay in ticks to wait after placing block");
 	
 	public Scaffold() {
@@ -38,6 +42,7 @@ public class Scaffold extends Mod {
 	@Override
 	public void onDisabled() {
 		RotationUtil.stopRotating();
+		SafeWalk.instance.setHiddenOn(false);
 	}
 	
 	@SubscribeEvent
@@ -46,12 +51,25 @@ public class Scaffold extends Mod {
 			return;
 		}
 
+		SafeWalk.instance.setHiddenOn(safeWalk.booleanValue());
+		
 		counter++;
 		if (counter < delay.intValue()) {
 			return;
 		}
 		
-		if (!BlockUtil.canPlaceBlock(getPlayerPos().add(0, -1, 0))) {
+		BlockPos pos = getPlayerPos().add(0, -1, 0);
+		if (getBlock(pos) == Blocks.AIR && !BlockUtil.canPlaceBlock(pos)) {
+			BlockPos[] list = {getPlayerPos().add(1, -1, 0), getPlayerPos().add(-1, -1, 0), getPlayerPos().add(0, -1, 1), getPlayerPos().add(0, -1, -1)};
+			for (BlockPos pos2 : list) {
+				if (BlockUtil.canPlaceBlock(pos2)) {
+					pos = pos2;
+					break;
+				}
+			}
+		}
+		
+		if (!BlockUtil.canPlaceBlock(pos)) {
 			counter2++;
 			if (counter2 > 40) {
 				RotationUtil.stopRotating();
@@ -62,7 +80,7 @@ public class Scaffold extends Mod {
 
 		counter2 = 0;
 		
-		if (isSolid(getPlayerPos().add(0, -1, 0)) || !BlockUtil.canPlaceBlock(getPlayerPos().add(0, -1, 0))) {
+		if (isSolid(pos) || !BlockUtil.canPlaceBlock(pos)) {
 			RotationUtil.stopRotating();
 			return;
 		}
@@ -74,7 +92,7 @@ public class Scaffold extends Mod {
 			return;
 		}
 		
-		BlockUtil.Place place = new BlockUtil.Place(null, Block.getBlockFromItem(InventoryUtil.getItemStack(slot).getItem()), getPlayerPos().add(0, -1, 0), true);
+		BlockUtil.Place place = new BlockUtil.Place(null, Block.getBlockFromItem(InventoryUtil.getItemStack(slot).getItem()), pos, true);
 		place.dontStopRotating = true;
 		place.rotateSpoofNoPacket = true;
 		place.onTick(null);
@@ -85,7 +103,7 @@ public class Scaffold extends Mod {
     @EventHandler
     private Listener<TravelEvent> travelEvent = new Listener<>(event -> {
     	if (tower.booleanValue() && mc.gameSettings.keyBindJump.isKeyDown() && isSolid(getPlayerPos().add(0, -2, 0))) {
-    		if (towerTimer.hasPassed(500)) {
+    		if (towerTimer.hasPassed(towerWait.intValue())) {
     			if (!mc.player.onGround && mc.player.posY - Math.floor(mc.player.posY) <= 0.1) {
         			mc.player.motionY = 0.41999998688697815;
     			}

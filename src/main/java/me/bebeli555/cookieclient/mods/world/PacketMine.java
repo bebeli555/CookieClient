@@ -7,6 +7,7 @@ import me.bebeli555.cookieclient.gui.Group;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
+import net.minecraft.util.EnumHand;
 
 public class PacketMine extends Mod {
 	public PacketMine() {
@@ -22,6 +23,7 @@ public class PacketMine extends Mod {
 		if (mc.gameSettings.keyBindAttack.isKeyDown()) {
 	        mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.START_DESTROY_BLOCK, mc.objectMouseOver.getBlockPos(), mc.objectMouseOver.sideHit));
 	        mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, mc.objectMouseOver.getBlockPos(), mc.objectMouseOver.sideHit));
+	        mc.player.swingArm(EnumHand.MAIN_HAND);
 		}
 	});
 	
