@@ -1,6 +1,6 @@
 package me.bebeli555.cookieclient.events.player;
 
-import me.zero.alpine.type.Cancellable;
+import me.bebeli555.cookieclient.events.bus.Cancellable;
 import net.minecraft.entity.MoverType;
 
 public class PlayerMoveEvent extends Cancellable {

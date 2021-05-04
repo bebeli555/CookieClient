@@ -1,6 +1,6 @@
 package me.bebeli555.cookieclient.events.entity;
 
-import me.zero.alpine.type.Cancellable;
+import me.bebeli555.cookieclient.events.bus.Cancellable;
 import net.minecraft.entity.Entity;
 
 public class EntityRemovedEvent extends Cancellable {

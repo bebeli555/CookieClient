@@ -8,6 +8,8 @@ import java.util.Iterator;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import me.bebeli555.cookieclient.Mod;
+import me.bebeli555.cookieclient.events.bus.EventHandler;
+import me.bebeli555.cookieclient.events.bus.Listener;
 import me.bebeli555.cookieclient.events.other.PacketEvent;
 import me.bebeli555.cookieclient.events.render.RenderEntityNameEvent;
 import me.bebeli555.cookieclient.gui.Group;
@@ -15,8 +17,6 @@ import me.bebeli555.cookieclient.gui.Mode;
 import me.bebeli555.cookieclient.gui.Setting;
 import me.bebeli555.cookieclient.mods.misc.Friends;
 import me.bebeli555.cookieclient.utils.ItemUtil;
-import me.zero.alpine.listener.EventHandler;
-import me.zero.alpine.listener.Listener;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.enchantment.Enchantment;
@@ -313,17 +313,22 @@ public class NameTags extends Mod {
 	
 	@EventHandler
 	private Listener<PacketEvent> packetEvent = new Listener<>(event -> {
-		if (event.packet instanceof SPacketEntityStatus) {
+		if (event.packet instanceof SPacketEntityStatus && mc.world != null) {
 			SPacketEntityStatus packet = (SPacketEntityStatus)event.packet;
 			
 			if (packet.getOpCode() == 35 && !packet.equals(lastPacket)) {
 				int amount = 1;
-				if (pops.containsKey(packet.getEntity(mc.world).getName())) {
-					amount += pops.get(packet.getEntity(mc.world).getName());
+				Entity entity = packet.getEntity(mc.world);
+				if (entity == null) {
+					return;
+				}
+				
+				if (pops.containsKey(entity.getName())) {
+					amount += pops.get(entity.getName());
 				}
 				
 				lastPacket = packet;
-				pops.put(packet.getEntity(mc.world).getName(), amount);
+				pops.put(entity.getName(), amount);
 			}
 		}
 	});

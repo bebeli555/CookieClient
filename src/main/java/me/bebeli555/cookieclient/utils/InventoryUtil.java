@@ -103,6 +103,7 @@ public class InventoryUtil extends Mod {
 	 * Switches the hand to the given slot or puts the item there if it aint in hotbar
 	 */
 	public static void switchItem(int slot, boolean sleep) {
+		int oldSlot = mc.player.inventory.currentItem;
 		if (slot < 9) {
 			mc.player.inventory.currentItem = slot;
 		} else {
@@ -122,6 +123,10 @@ public class InventoryUtil extends Mod {
 			if (sleep) sleep(200);
 			mc.player.inventory.currentItem = freeSlot;
 			if (sleep) sleep(100);
+		}
+		
+		if (oldSlot != mc.player.inventory.currentItem) {
+			mc.playerController.updateController();
 		}
 	}
 	
@@ -184,6 +189,19 @@ public class InventoryUtil extends Mod {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Gets slot for this item in hotbar
+	 */
+	public static int getSlotInHotbar(Item item) {
+		for (int i = 0; i < 9; i++) {
+			if (getItemStack(i).getItem() == item) {
+				return i;
+			}
+		}
+		
+		return -1;
 	}
 	
 	/**

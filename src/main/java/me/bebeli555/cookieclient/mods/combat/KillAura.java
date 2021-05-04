@@ -88,14 +88,12 @@ public class KillAura extends Mod {
 			return;
 		}
 		
-		//Switch to sword in hotbar
-		if (!isWeapon(mc.player.getHeldItemOffhand().getItem())) {
-			int slot = getWeaponSlot();
-			
-			if (slot != -1) {
-				mc.player.inventory.currentItem = slot;
-				mc.playerController.updateController();
-			}
+		//Switch to weapon in hotbar
+		int slot = getWeaponSlot();
+		
+		if (slot != -1 && slot != mc.player.inventory.currentItem) {
+			mc.player.inventory.currentItem = slot;
+			mc.playerController.updateController();
 		}
 		
 		//Rotate to entity
@@ -118,7 +116,7 @@ public class KillAura extends Mod {
 	}
 	
 	public static boolean isValid(Entity entity) {
-		if (entity.equals(mc.player) || !entity.isEntityAlive()) {
+		if (entity.equals(mc.player) || entity.equals(mc.renderViewEntity) || !entity.isEntityAlive()) {
 			return false;
 		}
 		

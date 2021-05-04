@@ -1,6 +1,8 @@
 package me.bebeli555.cookieclient.mods.combat;
 
 import me.bebeli555.cookieclient.Mod;
+import me.bebeli555.cookieclient.events.bus.EventHandler;
+import me.bebeli555.cookieclient.events.bus.Listener;
 import me.bebeli555.cookieclient.events.player.PlayerMotionUpdateEvent;
 import me.bebeli555.cookieclient.gui.Group;
 import me.bebeli555.cookieclient.gui.Mode;
@@ -8,24 +10,34 @@ import me.bebeli555.cookieclient.gui.Setting;
 import me.bebeli555.cookieclient.utils.BlockUtil;
 import me.bebeli555.cookieclient.utils.InventoryUtil;
 import me.bebeli555.cookieclient.utils.RotationUtil;
-import me.zero.alpine.listener.EventHandler;
-import me.zero.alpine.listener.Listener;
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.math.BlockPos;
 
 public class Surround extends Mod {
+	private int oldSlot = -1;
+	
 	public static Setting blocksPerTick = new Setting(Mode.INTEGER, "BlocksPerTick", 1, "How many blocks to place per tick");
 	public static Setting center = new Setting(Mode.BOOLEAN, "Center", true, "Center before so it can place all the blocks");
+		public static Setting centerMode = new Setting(center, "Mode", "Motion", new String[]{"Motion"}, new String[]{"Teleport"});
+	public static Setting toggle = new Setting(Mode.BOOLEAN, "Toggle", false, "Toggles it off when there is no blocks to place");
 	
 	public Surround() {
 		super(Group.COMBAT, "Surround", "Surrounds your feet with obsidian", "Useful for blocking crystal damage");
 	}
 	
 	@Override
-	public void onDisabled() {
+	public void onDisabled() {		
+		//Switch to old slot
+		if (oldSlot != -1) {
+			mc.player.inventory.currentItem = oldSlot;
+		}
+		
+		oldSlot = -1;
 		RotationUtil.stopRotating();
 	}
-	
+
     @EventHandler
     private Listener<PlayerMotionUpdateEvent> onMotionUpdate = new Listener<>(p_Event -> {
 		if (mc.player == null) {
@@ -36,6 +48,10 @@ public class Surround extends Mod {
 			disable();
 			sendMessage("You need obsidian", true);
 			return;
+		}
+		
+		if (Block.getBlockFromItem(mc.player.getHeldItemMainhand().getItem()) != Blocks.OBSIDIAN) {
+			oldSlot = mc.player.inventory.currentItem;
 		}
 		
 		int blocksPlaced = 0;
@@ -50,8 +66,10 @@ public class Surround extends Mod {
 					boolean canPlaceBelow = BlockUtil.canPlaceBlock(pos.add(0, -1, 0));
 					
 					if (center.booleanValue() && canPlace || center.booleanValue() && canPlaceBelow) {
-						if (!center()) {
+						if (centerMode.stringValue().equals("Motion") && !centerMotion()) {
 							return;
+						} else if (centerMode.stringValue().equals("Teleport")) {
+							centerTeleport();
 						}
 					}
 					
@@ -71,12 +89,16 @@ public class Surround extends Mod {
 				}
 			}
 		}
+		
+		if (blocksPlaced == 0 && toggle.booleanValue()) {
+			disable();
+		}
     });
 	
 	/**
-	 * Centers the player
+	 * Centers the player by using motion mode
 	 */
-	public static boolean center() {
+	public static boolean centerMotion() {
 		if (isCentered()) {
 			return true;
 		}
@@ -88,11 +110,24 @@ public class Surround extends Mod {
 	}
 	
 	/**
+	 * Centers the player using teleport mode
+	 */
+	public static void centerTeleport() {
+		if (isCentered()) {
+			return;
+		}
+		
+		double[] centerPos = {Math.floor(mc.player.posX) + 0.5, Math.floor(mc.player.posY), Math.floor(mc.player.posZ) + 0.5};
+		mc.player.connection.sendPacket(new CPacketPlayer.Position(centerPos[0], mc.player.posY, centerPos[2], mc.player.onGround));
+		mc.player.setPosition(centerPos[0], mc.player.posY, centerPos[2]);
+	}
+	
+	/**
 	 * Checks if the player is centered on the block
 	 */
 	public static boolean isCentered() {
 		double[] centerPos = {Math.floor(mc.player.posX) + 0.5, Math.floor(mc.player.posY), Math.floor(mc.player.posZ) + 0.5};
-		return Math.abs(centerPos[0] - mc.player.posX) <= 0.2 && Math.abs(centerPos[2] - mc.player.posZ) <= 0.2;
+		return Math.abs(centerPos[0] - mc.player.posX) <= 0.1 && Math.abs(centerPos[2] - mc.player.posZ) <= 0.1;
 	}
 	
 	/**

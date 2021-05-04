@@ -1,6 +1,6 @@
 package me.bebeli555.cookieclient.events.render;
 
-import me.zero.alpine.type.Cancellable;
+import me.bebeli555.cookieclient.events.bus.Cancellable;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.entity.Entity;
 

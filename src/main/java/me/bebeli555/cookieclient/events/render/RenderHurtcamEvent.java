@@ -1,6 +1,6 @@
 package me.bebeli555.cookieclient.events.render;
 
-import me.zero.alpine.type.Cancellable;
+import me.bebeli555.cookieclient.events.bus.Cancellable;
 
 public class RenderHurtcamEvent extends Cancellable {
 	public float ticks;

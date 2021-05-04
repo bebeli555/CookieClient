@@ -8,7 +8,6 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import me.bebeli555.cookieclient.Mod;
 import me.bebeli555.cookieclient.gui.Group;
-import me.bebeli555.cookieclient.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.SoundEvents;
@@ -105,13 +104,11 @@ public class Tetris extends Mod {
 		//Draw white lines.
 		drawWhiteLine(fromX, toX, fromY, toY);
 		
-		
 		//Draw score
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(1.25F, 1.25F, 1.25F);
 		mc.fontRenderer.drawStringWithShadow(ChatFormatting.DARK_AQUA + "Score: " + ChatFormatting.GREEN + score, 325, 125, 0xffff);
 		GlStateManager.popMatrix();
-		
 		
 		if (gameOver == true) {
 			// GameOver Screen
@@ -146,10 +143,10 @@ public class Tetris extends Mod {
 				TetrisNode Node = currentNode.getFamily().get(i);
 				int x = Node.getX();
 				int y = Node.getDownPosition();
-				Gui.drawRect(x, y, x + 1, y - TetrisNode.multiplier, 0xFFFFFFFF);
-				Gui.drawRect(x, y, x + TetrisNode.multiplier, y + 1, 0xFFFFFFFF);
-				Gui.drawRect(x + TetrisNode.multiplier, y, x + TetrisNode.multiplier + 1, y - TetrisNode.multiplier, 0xFFFFFFFF);
-				Gui.drawRect(x, y - TetrisNode.multiplier, x + TetrisNode.multiplier, y - TetrisNode.multiplier + 1, 0xFFFFFFFF);
+				GuiScreen.drawRect(x, y, x + 1, y - TetrisNode.multiplier, 0xFFFFFFFF);
+				GuiScreen.drawRect(x, y, x + TetrisNode.multiplier, y + 1, 0xFFFFFFFF);
+				GuiScreen.drawRect(x + TetrisNode.multiplier, y, x + TetrisNode.multiplier + 1, y - TetrisNode.multiplier, 0xFFFFFFFF);
+				GuiScreen.drawRect(x, y - TetrisNode.multiplier, x + TetrisNode.multiplier, y - TetrisNode.multiplier + 1, 0xFFFFFFFF);
 			}
 		}
 	}

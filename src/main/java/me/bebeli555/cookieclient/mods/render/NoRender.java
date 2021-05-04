@@ -1,6 +1,8 @@
 package me.bebeli555.cookieclient.mods.render;
 
 import me.bebeli555.cookieclient.Mod;
+import me.bebeli555.cookieclient.events.bus.EventHandler;
+import me.bebeli555.cookieclient.events.bus.Listener;
 import me.bebeli555.cookieclient.events.other.IsPotionEffectActiveEvent;
 import me.bebeli555.cookieclient.events.other.PacketEvent;
 import me.bebeli555.cookieclient.events.render.GetRainStrenghtEvent;
@@ -14,8 +16,6 @@ import me.bebeli555.cookieclient.events.render.RenderUpdateLightMapEvent;
 import me.bebeli555.cookieclient.gui.Group;
 import me.bebeli555.cookieclient.gui.Mode;
 import me.bebeli555.cookieclient.gui.Setting;
-import me.zero.alpine.listener.EventHandler;
-import me.zero.alpine.listener.Listener;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.MobEffects;
 import net.minecraft.network.play.server.SPacketEntityStatus;
@@ -35,6 +35,7 @@ public class NoRender extends Mod {
 	public static Setting maps = new Setting(Mode.BOOLEAN, "Maps", false, "Doesnt render maps");
 	public static Setting bossHealth = new Setting(Mode.BOOLEAN, "BossHealth", false, "Doesnt render the boss bar");
 	public static Setting weather = new Setting(Mode.BOOLEAN, "Weather", false, "Doesnt render weather");
+	public static Setting portal = new Setting(Mode.BOOLEAN, "Portal", false, "Doesnt render the portal effect", "You can also use NoSound in Misc to disable the sound of it");
 	
 	public NoRender() {
 		super(Group.RENDER, "NoRender", "Doesnt render certain things");
@@ -53,7 +54,6 @@ public class NoRender extends Mod {
         if (event.entity instanceof EntityItem && noItems.booleanValue()) {
             event.cancel();
         }
-    
     });
     
     @EventHandler
@@ -74,6 +74,10 @@ public class NoRender extends Mod {
     private Listener<IsPotionEffectActiveEvent> isPotionActive = new Listener<>(event -> {
         if (event.potion == MobEffects.BLINDNESS && blindness.booleanValue()) {
         	event.cancel();
+        }
+        
+        if (portal.booleanValue() && event.potion == MobEffects.NAUSEA && mc.player != null) {
+        	mc.player.removePotionEffect(event.potion);
         }
     });
     

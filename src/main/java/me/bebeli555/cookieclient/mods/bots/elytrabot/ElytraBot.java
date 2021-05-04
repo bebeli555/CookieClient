@@ -7,6 +7,8 @@ import java.util.Arrays;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import me.bebeli555.cookieclient.Mod;
+import me.bebeli555.cookieclient.events.bus.EventHandler;
+import me.bebeli555.cookieclient.events.bus.Listener;
 import me.bebeli555.cookieclient.events.other.PacketEvent;
 import me.bebeli555.cookieclient.gui.Group;
 import me.bebeli555.cookieclient.gui.Mode;
@@ -23,8 +25,6 @@ import me.bebeli555.cookieclient.utils.MiningUtil;
 import me.bebeli555.cookieclient.utils.PlayerUtil;
 import me.bebeli555.cookieclient.utils.RotationUtil;
 import me.bebeli555.cookieclient.utils.Timer;
-import me.zero.alpine.listener.EventHandler;
-import me.zero.alpine.listener.Listener;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
@@ -221,7 +221,7 @@ public class ElytraBot extends Mod {
 			if (isSolid(getPlayerPos().add(0, 2, 0)) && mode.stringValue().equals("Tunnel")) {
 				if (getBlock(getPlayerPos().add(0, 2, 0)) != Blocks.BEDROCK) {
 					setStatus("Mining above block so we can takeoff");
-					Surround.center();
+					Surround.centerMotion();
 					MiningUtil.mineAnyway(getPlayerPos().add(0, 2, 0), false);
 				} else {
 					if (useBaritone.booleanValue()) {

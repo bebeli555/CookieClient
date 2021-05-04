@@ -1,13 +1,13 @@
 package me.bebeli555.cookieclient.hud.components;
 
 import me.bebeli555.cookieclient.Mod;
+import me.bebeli555.cookieclient.events.bus.EventHandler;
+import me.bebeli555.cookieclient.events.bus.Listener;
 import me.bebeli555.cookieclient.events.other.PacketEvent;
 import me.bebeli555.cookieclient.events.other.PacketServerEvent;
 import me.bebeli555.cookieclient.gui.GuiSettings;
 import me.bebeli555.cookieclient.hud.HudComponent;
 import me.bebeli555.cookieclient.hud.HudEditor;
-import me.zero.alpine.listener.EventHandler;
-import me.zero.alpine.listener.Listener;
 import net.minecraft.network.play.server.SPacketTimeUpdate;
 import net.minecraft.util.math.MathHelper;
 

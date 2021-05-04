@@ -3,11 +3,13 @@ package me.bebeli555.cookieclient.mods.movement;
 import org.lwjgl.input.Keyboard;
 
 import me.bebeli555.cookieclient.Mod;
+import me.bebeli555.cookieclient.events.bus.EventHandler;
+import me.bebeli555.cookieclient.events.bus.Listener;
 import me.bebeli555.cookieclient.events.player.PlayerUpdateMoveStatePostEvent;
 import me.bebeli555.cookieclient.gui.Group;
-import me.zero.alpine.listener.EventHandler;
-import me.zero.alpine.listener.Listener;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiScreenBook;
+import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.client.settings.KeyBinding;
 
 public class InventoryMove extends Mod {
@@ -17,7 +19,7 @@ public class InventoryMove extends Mod {
 	
     @EventHandler
     private Listener<PlayerUpdateMoveStatePostEvent> onKeyPress = new Listener<>(event -> {
-    	if (mc.currentScreen == null || mc.currentScreen instanceof GuiChat) {
+    	if (mc.currentScreen == null || mc.currentScreen instanceof GuiChat || mc.currentScreen instanceof GuiEditSign || mc.currentScreen instanceof GuiScreenBook) {
     		return;
     	}
     	

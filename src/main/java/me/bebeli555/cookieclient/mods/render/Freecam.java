@@ -3,14 +3,14 @@ package me.bebeli555.cookieclient.mods.render;
 import org.lwjgl.input.Mouse;
 
 import me.bebeli555.cookieclient.Mod;
+import me.bebeli555.cookieclient.events.bus.EventHandler;
+import me.bebeli555.cookieclient.events.bus.Listener;
 import me.bebeli555.cookieclient.events.other.PacketEvent;
 import me.bebeli555.cookieclient.events.player.PlayerUpdateMoveStateEvent;
 import me.bebeli555.cookieclient.gui.Group;
 import me.bebeli555.cookieclient.gui.Mode;
 import me.bebeli555.cookieclient.gui.Setting;
 import me.bebeli555.cookieclient.utils.BaritoneUtil;
-import me.zero.alpine.listener.EventHandler;
-import me.zero.alpine.listener.Listener;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
@@ -62,13 +62,11 @@ public class Freecam extends Mod {
 		MinecraftForge.EVENT_BUS.unregister(this);
 		mc.renderChunksMany = true;
 		
-		try {
+		if (mc.player != null && mc.world != null && mc.renderViewEntity != null) {
 			mc.player.moveStrafing = 0;
 			mc.player.moveForward = 0;
-            mc.world.removeEntity(camera);
+	        mc.world.removeEntity(camera);
 	        mc.renderViewEntity = mc.player;
-		} catch (Exception e) {
-			
 		}
 	}
 	
@@ -168,8 +166,8 @@ public class Freecam extends Mod {
 	
     @EventHandler
     private Listener<PlayerUpdateMoveStateEvent> onKeyPress = new Listener<>(event -> {
-		mc.player.moveStrafing = Integer.MIN_VALUE;
-		mc.player.moveForward = Integer.MIN_VALUE;
+		mc.player.movementInput.moveForward = 0;
+		mc.player.movementInput.moveStrafe = 0;
 		mc.player.movementInput.jump = false;
 		mc.player.movementInput.sneak = false;
 		mc.player.setSprinting(false);

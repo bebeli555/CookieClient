@@ -76,7 +76,7 @@ public class AutoEnderChestMiner extends Mod {
 
 		if (availableSpot != null) {
 			setStatus("Placing Enderchest");
-			Surround.center();
+			Surround.centerMotion();
 			BlockUtil.placeBlock(Blocks.ENDER_CHEST, availableSpot, true);
 			sleep(delay.intValue());
 		} else {

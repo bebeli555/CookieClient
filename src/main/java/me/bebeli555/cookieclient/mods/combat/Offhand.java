@@ -1,24 +1,26 @@
 package me.bebeli555.cookieclient.mods.combat;
 
 import me.bebeli555.cookieclient.Mod;
+import me.bebeli555.cookieclient.events.bus.EventHandler;
+import me.bebeli555.cookieclient.events.bus.Listener;
 import me.bebeli555.cookieclient.events.player.PlayerUpdateEvent;
 import me.bebeli555.cookieclient.gui.Group;
 import me.bebeli555.cookieclient.gui.Mode;
 import me.bebeli555.cookieclient.gui.Setting;
 import me.bebeli555.cookieclient.utils.InventoryUtil;
-import me.zero.alpine.listener.EventHandler;
-import me.zero.alpine.listener.Listener;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 
 public class Offhand extends Mod {
 	private boolean autoTotem;
+	public static Offhand instance;
 	
 	public static Setting mode = new Setting(null, "Mode", "Gap", new String[]{"Gap"}, new String[]{"Crystal"}, new String[]{"Bow"}, new String[]{"XP"});
 	public static Setting toggleHealth = new Setting(Mode.DOUBLE, "ToggleHealth", 5, "When your health goes below or equal to this amount", "It will toggle this off and enabled autototem", "If you had it on previously");
 	
 	public Offhand() {
 		super(Group.COMBAT, "Offhand", "Pauses autototem and puts something else to your offhand");
+		instance = this;
 	}
 	
 	@Override

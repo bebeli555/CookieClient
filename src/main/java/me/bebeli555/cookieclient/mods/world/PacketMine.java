@@ -1,11 +1,11 @@
 package me.bebeli555.cookieclient.mods.world;
 
 import me.bebeli555.cookieclient.Mod;
+import me.bebeli555.cookieclient.events.bus.EventHandler;
+import me.bebeli555.cookieclient.events.bus.Listener;
 import me.bebeli555.cookieclient.events.player.PlayerDamageBlockEvent;
 import me.bebeli555.cookieclient.events.player.PlayerMotionUpdateEvent;
 import me.bebeli555.cookieclient.gui.Group;
-import me.zero.alpine.listener.EventHandler;
-import me.zero.alpine.listener.Listener;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.util.EnumHand;
 
@@ -16,7 +16,7 @@ public class PacketMine extends Mod {
 	
 	@EventHandler
 	private Listener<PlayerMotionUpdateEvent> onMotionUpdate = new Listener<>(event -> {
-		if (mc.player == null || mc.objectMouseOver == null || mc.objectMouseOver.getBlockPos() == null) {
+		if (mc.player == null || mc.objectMouseOver == null || mc.objectMouseOver.getBlockPos() == null || mc.objectMouseOver.sideHit == null) {
 			return;
 		}
 		

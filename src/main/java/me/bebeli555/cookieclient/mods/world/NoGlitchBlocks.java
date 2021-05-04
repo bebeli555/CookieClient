@@ -1,15 +1,19 @@
 package me.bebeli555.cookieclient.mods.world;
 
 import me.bebeli555.cookieclient.Mod;
+import me.bebeli555.cookieclient.events.bus.EventHandler;
+import me.bebeli555.cookieclient.events.bus.Listener;
 import me.bebeli555.cookieclient.events.other.ProcessRightClickBlockEvent;
 import me.bebeli555.cookieclient.events.player.PlayerDestroyBlockEvent;
 import me.bebeli555.cookieclient.gui.Group;
 import me.bebeli555.cookieclient.gui.Mode;
 import me.bebeli555.cookieclient.gui.Setting;
-import me.zero.alpine.listener.EventHandler;
-import me.zero.alpine.listener.Listener;
+import net.minecraft.block.Block;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
 
+/**
+ * TODO: Play sound when block is placed onRightClickBlock event
+ */
 public class NoGlitchBlocks extends Mod {
 	public static Setting place = new Setting(Mode.BOOLEAN, "Place", true);
 	public static Setting destroy = new Setting(Mode.BOOLEAN, "Destroy", true);
@@ -21,6 +25,7 @@ public class NoGlitchBlocks extends Mod {
     @EventHandler
     private Listener<PlayerDestroyBlockEvent> onPlayerDestroyBlock = new Listener<>(event -> {
     	if (destroy.booleanValue()) {
+    		mc.world.playEvent(2001, event.pos, Block.getStateId(mc.world.getBlockState(event.pos)));
     		event.cancel();
     	}
     });

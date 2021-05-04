@@ -68,11 +68,19 @@ public class Setting {
 	
 	public void setValue(Object value) {
 		if (!this.value.equals(value)) {
+			Object oldValue = this.value;
 			this.value = value;
 			
 			for (ValueChangedListener listener : listeners) {
 				if (!listener.onlyIfModuleIsOn || listener.module.isOn()) {
 					listener.valueChanged();
+					
+					if (listener.cancelled) {
+						this.value = oldValue;
+						listener.cancelled = false;
+						updateGuiNode();
+						return;
+					}
 				}
 			}
 		}
@@ -180,6 +188,7 @@ public class Setting {
 	public static class ValueChangedListener {
 		public Mod module;
 		public boolean onlyIfModuleIsOn = true;
+		public boolean cancelled;
 		
 		public ValueChangedListener(Mod module, boolean onlyIfModuleIsOn) {
 			this.module = module;
@@ -191,6 +200,13 @@ public class Setting {
 		 */
 		public void valueChanged() {
 			
+		}
+		
+		/**
+		 * Cancels the change and puts the old value back
+		 */
+		public void cancel() {
+			cancelled = true;
 		}
 	}
 }

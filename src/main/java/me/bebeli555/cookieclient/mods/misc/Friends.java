@@ -11,6 +11,8 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import me.bebeli555.cookieclient.Mod;
 import me.bebeli555.cookieclient.gui.Group;
+import me.bebeli555.cookieclient.gui.Mode;
+import me.bebeli555.cookieclient.gui.Setting;
 import me.bebeli555.cookieclient.gui.Settings;
 import me.bebeli555.cookieclient.utils.PlayerUtil;
 import net.minecraft.entity.Entity;
@@ -22,6 +24,8 @@ public class Friends extends Mod {
 	public static boolean toggled;
  	public static ArrayList<String> friends = new ArrayList<String>();
  	public static File file = new File(Settings.path + "/Friends.txt");
+ 	
+ 	public static Setting message = new Setting(Mode.BOOLEAN, "Message", false, "/msg's the player that he has", "Been added/removed on the client");
  	
 	public Friends() {
 		super(Group.MISC, "Friends", "Makes the friend system work", "Disabling this will disable all friend features");
@@ -99,6 +103,10 @@ public class Friends extends Mod {
 	
 	//Add friend and update file
 	public static void addFriend(String name) {
+		if (message.booleanValue()) {
+			mc.player.sendChatMessage("/msg " + name + " You have been added to friends in " + NAME);
+		}
+		
 		friends.add(name);
 		saveFriends();
 		 
@@ -109,6 +117,10 @@ public class Friends extends Mod {
 	
 	//Remove friend and update file
 	public static void removeFriend(String name) {
+		if (message.booleanValue()) {
+			mc.player.sendChatMessage("/msg " + name + " You have been removed from friends in " + NAME);
+		}
+		
 		friends.remove(name);
 		saveFriends();
 		

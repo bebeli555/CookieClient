@@ -4,6 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import me.bebeli555.cookieclient.Mod;
+import me.bebeli555.cookieclient.events.block.CanCollideEvent;
 import me.bebeli555.cookieclient.events.block.LiquidCollisionEvent;
 
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,6 +25,16 @@ public class MixinBlockLiquid {
     	
     	if (event.isCancelled()) {
     		info.setReturnValue(event.boundingBox);
+    	}
+    }
+    
+    @Inject(method = "canCollideCheck", at = @At("HEAD"), cancellable = true)
+    public void canCollideCheck(IBlockState state, boolean hitIfLiquid, CallbackInfoReturnable<Boolean> info) {
+    	CanCollideEvent event = new CanCollideEvent(state);
+    	Mod.EVENT_BUS.post(event);
+    	
+    	if (event.isCancelled()) {
+    		info.setReturnValue(true);
     	}
     }
 }

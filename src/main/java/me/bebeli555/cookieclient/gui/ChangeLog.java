@@ -12,6 +12,16 @@ public class ChangeLog extends Mod {
 	
 	public static String[] getChangeLog() {
 		String[] changelog = {
+				"version: v1.02-beta",
+				"- Added StashLogger",
+				"- Added AutoRespawn",
+				"- Added NoSound",
+				"- Added LiquidInteract",
+				"- Added Toggle mode to Surround",
+				"- Added Portal to NoRender",
+				"- Improved AutoCrystal",
+				"- Other stuff",
+				"",
 				"version: v1.01-beta",
 				"- Added PortalGodMode",
 				"- Added LiquidSpeed",

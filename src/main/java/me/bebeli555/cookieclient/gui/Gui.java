@@ -17,6 +17,7 @@ import me.bebeli555.cookieclient.Commands;
 import me.bebeli555.cookieclient.Mod;
 import me.bebeli555.cookieclient.mods.games.Snake;
 import me.bebeli555.cookieclient.mods.games.tetris.Tetris;
+import me.bebeli555.cookieclient.utils.Timer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
@@ -31,7 +32,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-public class Gui extends GuiScreen {	
+public class Gui extends GuiScreen {
+	public static ArrayList<Runnable> renderList = new ArrayList<Runnable>();
+	public static Timer timer = new Timer();
 	public static Minecraft mc = Minecraft.getMinecraft();
 	public static ArrayList<GuiClick> visibleNodes = new ArrayList<GuiClick>();
 	public static boolean isOpen;
@@ -54,7 +57,7 @@ public class Gui extends GuiScreen {
 	}
 	
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {		
+	public void drawScreen(int mouseX2, int mouseY2, float partialTicks) {		
 		//Scale the gui to match the resolution and the gui scale.
 		Dimension resolution = Toolkit.getDefaultToolkit().getScreenSize();
 		GlStateManager.pushMatrix();
@@ -62,10 +65,24 @@ public class Gui extends GuiScreen {
 		this.setGuiSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
 		
 		guiScale = (float)getGuiScale(guiScale);
-		mouseX = (int)(mouseX / guiScale);
-		mouseY = (int)(mouseY / guiScale);
+		final int mouseX = (int)(mouseX2 / guiScale);
+		final int mouseY = (int)(mouseY2 / guiScale);
 		
 		GlStateManager.scale(guiScale, guiScale, guiScale);
+		
+		//Render the old things because theres no need to recalculate all the things like 140 times a second
+		if (!timer.hasPassed(25)) {
+			for (Runnable render : renderList) {
+				render.run();
+			}
+			
+			renderGames(mouseX, mouseY, partialTicks);	
+			GlStateManager.popMatrix();
+			return;
+		}
+		
+		renderList.clear();
+		timer.reset();
 		
 		//Draw background
 		drawRect(0, 0, 2000, 2000, 0x99000000);
@@ -76,7 +93,7 @@ public class Gui extends GuiScreen {
 		
 		//Draw changelog
 		if (GuiSettings.changelog.booleanValue()) {
-			ChangeLog.drawChangelog(mouseX, mouseY);
+			renderList.add(() -> ChangeLog.drawChangelog(mouseX, mouseY));
 		}
 		
 		//Drag group
@@ -94,17 +111,17 @@ public class Gui extends GuiScreen {
 		
 		//Top left info text
 		if (GuiSettings.infoBox.booleanValue()) {
-			GlStateManager.pushMatrix();
-			GlStateManager.scale(0.9, 0.9, 0.9);
+			renderList.add(() -> GlStateManager.pushMatrix());
+			renderList.add(() -> GlStateManager.scale(0.9, 0.9, 0.9));
 			int infoWidth = mc.fontRenderer.getStringWidth(ChatFormatting.RED + "Discord: " + ChatFormatting.GREEN + Mod.DISCORD + 2);
 			drawRect(0, 0, infoWidth, 44, 0xFF000000);
 			drawRect(0, 43, infoWidth, 44, 0x99d303fc);
 			drawRect(infoWidth, 0, infoWidth + 1, 44, 0x99d303fc);
-			mc.fontRenderer.drawStringWithShadow(ChatFormatting.RED + Mod.NAME + ChatFormatting.GREEN + " v" + Mod.VERSION, 2, 2, 0xFF000000);
-			mc.fontRenderer.drawStringWithShadow(ChatFormatting.RED + "Made by: " + ChatFormatting.GREEN + "bebeli555", 2, 12, 0xFF000000);
-			mc.fontRenderer.drawStringWithShadow(ChatFormatting.RED + "Discord: " + ChatFormatting.GREEN + Mod.DISCORD, 2, 22, 0xFF000000);
-			mc.fontRenderer.drawStringWithShadow(ChatFormatting.RED + "Github: " + ChatFormatting.GREEN + "bebeli555/CookieClient", 2, 32, 0xFF000000);
-			GlStateManager.popMatrix();
+			drawStringWithShadow(ChatFormatting.RED + Mod.NAME + ChatFormatting.GREEN + " v" + Mod.VERSION, 2, 2, 0xFF000000);
+			drawStringWithShadow(ChatFormatting.RED + "Made by: " + ChatFormatting.GREEN + "bebeli555", 2, 12, 0xFF000000);
+			drawStringWithShadow(ChatFormatting.RED + "Discord: " + ChatFormatting.GREEN + Mod.DISCORD, 2, 22, 0xFF000000);
+			drawStringWithShadow(ChatFormatting.RED + "Github: " + ChatFormatting.GREEN + "bebeli555/CookieClient", 2, 32, 0xFF000000);
+			renderList.add(() -> GlStateManager.popMatrix());
 		}
 		
 		//Draw all visible nodes
@@ -136,11 +153,11 @@ public class Gui extends GuiScreen {
 			
 			drawRect(x, y, x2, y2, GuiSettings.groupBackground.intValue());
 			drawBorder(true, true, true, true, GuiSettings.borderColor.intValue(), guiClick, GuiSettings.borderSize.doubleValue());
-			GlStateManager.pushMatrix();
+			renderList.add(() -> GlStateManager.pushMatrix());
 			float scale = (float)GuiSettings.groupScale.doubleValue();
-			GlStateManager.scale(scale, scale, scale);
-			mc.fontRenderer.drawStringWithShadow(group.name, (((x2 / scale) - (x / scale)) / 2) + (x / scale) - ((mc.fontRenderer.getStringWidth(group.name)) / 2), (y + (5 / scale)) / scale, GuiSettings.groupTextColor.intValue());
-			GlStateManager.popMatrix();
+			scale(scale);
+			drawStringWithShadow(group.name, (((x2 / scale) - (x / scale)) / 2) + (x / scale) - ((mc.fontRenderer.getStringWidth(group.name)) / 2), (y + (5 / scale)) / scale, GuiSettings.groupTextColor.intValue());
+			renderList.add(() -> GlStateManager.popMatrix());
 			
 			if (x < mouseX && x2 > mouseX && y < mouseY && y2 > mouseY) {
 				description = guiClick;
@@ -218,10 +235,10 @@ public class Gui extends GuiScreen {
 						
 						if (left) {
 							drawRect(g.x2 - longestWidth, y - 2, g.x - 2, y + 10, 0xFF000000);
-							mc.fontRenderer.drawStringWithShadow(description[i], (g.x2) - longestWidth + 2, ((g.y + 6) + (i * 10)), 0xffff);
+							drawStringWithShadow(description[i], (g.x2) - longestWidth + 2, ((g.y + 6) + (i * 10)), 0xffff);
 						} else {
 							drawRect(g.x2 + 8, y - 2, g.x2 + width + 12, y + 10, 0xFF000000);
-							mc.fontRenderer.drawStringWithShadow(description[i], (g.x2) + 10, ((g.y + 6) + (i * 10)), 0xffff);	
+							drawStringWithShadow(description[i], (g.x2) + 10, ((g.y + 6) + (i * 10)), 0xffff);	
 						}
 					}
 				}
@@ -230,12 +247,11 @@ public class Gui extends GuiScreen {
 			}
 		}
 		
-		for (Mod module : Mod.modules) {
-			if (module.isOn()) {
-				module.onGuiDrawScreen(mouseX, mouseY, partialTicks);
-			}
+		for (Runnable render : renderList) {
+			render.run();
 		}
 		
+		renderGames(mouseX, mouseY, partialTicks);
 		lastMouseX = mouseX;
 		lastMouseY = mouseY;
 		GlStateManager.popMatrix();
@@ -272,21 +288,21 @@ public class Gui extends GuiScreen {
 		
 		float scale = 1F;
 		if (mc.fontRenderer.getStringWidth(text) > g.x2 - g.x) {
-			GlStateManager.pushMatrix();
+			renderList.add(() -> GlStateManager.pushMatrix());
 			
 			int width = (int)mc.fontRenderer.getStringWidth(text);
 			while (width * scale > g.x2 - g.x) {
 				scale -= 0.03;
 			}
 			
-			GlStateManager.scale(scale, scale, scale);
+			scale(scale);
 		}
 		
 		//This is some serious math
-		mc.fontRenderer.drawStringWithShadow(text, (((g.x2 / scale) - (g.x / scale)) / 2) + (g.x / scale) - ((mc.fontRenderer.getStringWidth(text)) / 2), (int)(g.y + (g.y2 - g.y) / 3) / scale, g.guiNode.getTextColor());
+		drawStringWithShadow(text, (((g.x2 / scale) - (g.x / scale)) / 2) + (g.x / scale) - ((mc.fontRenderer.getStringWidth(text)) / 2), (int)(g.y + (g.y2 - g.y) / 3) / scale, g.guiNode.getTextColor());
 		
 		if (scale != 1F) {
-			GlStateManager.popMatrix();
+			renderList.add(() -> GlStateManager.popMatrix());
 		}
 		
 		//Draw border
@@ -318,55 +334,6 @@ public class Gui extends GuiScreen {
 		
 		//Add GuiClick to visibleNodes list
 		visibleNodes.add(g);
-	}
-	
-	public static void drawBorder(boolean right, boolean left, boolean up, boolean down, int color, GuiClick n, double borderSize) {
-		if (up) drawRectDouble(n.x, n.y, n.x2, n.y + borderSize, color);
-		if (down) drawRectDouble(n.x, n.y2, n.x2, n.y2 + borderSize, color);
-		if (left) drawRectDouble(n.x, n.y, n.x + borderSize, n.y2, color);
-		if (right) drawRectDouble(n.x2, n.y, n.x2 + borderSize, n.y2 + borderSize, color);
-	}
-	
-	public static void drawRectDouble(double left, double top, double right, double bottom, int color) {
-        if (left < right) {
-            double i = left;
-            left = right;
-            right = i;
-        }
-
-        if (top < bottom) {
-        	double j = top;
-            top = bottom;
-            bottom = j;
-        }
-
-        float f3 = (float)(color >> 24 & 255) / 255.0F;
-        float f = (float)(color >> 16 & 255) / 255.0F;
-        float f1 = (float)(color >> 8 & 255) / 255.0F;
-        float f2 = (float)(color & 255) / 255.0F;
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
-        GlStateManager.enableBlend();
-        GlStateManager.disableTexture2D();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.color(f, f1, f2, f3);
-        bufferbuilder.begin(7, DefaultVertexFormats.POSITION);
-        bufferbuilder.pos(left, bottom, 0.0D).endVertex();
-        bufferbuilder.pos(right, bottom, 0.0D).endVertex();
-        bufferbuilder.pos(right, top, 0.0D).endVertex();
-        bufferbuilder.pos(left, top, 0.0D).endVertex();
-        tessellator.draw();
-        GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
-	}
-	
-	//Update gui groups. So these are set when gui closes not the scrolled ones or the gui could go out of screen and confusion strikes
-	public static void updateGuiGroups() {
-		groupCoords.clear();
-		
-		for (Group group : Group.values()) {
-			groupCoords.add(new Point(group.x, group.y));
-		}
 	}
 	
 	@Override
@@ -616,6 +583,75 @@ public class Gui extends GuiScreen {
 		}
 		
 		return start;
+	}
+	
+	public static void drawBorder(boolean right, boolean left, boolean up, boolean down, int color, GuiClick n, double borderSize) {
+		if (up) drawRectDouble(n.x, n.y, n.x2, n.y + borderSize, color);
+		if (down) drawRectDouble(n.x, n.y2, n.x2, n.y2 + borderSize, color);
+		if (left) drawRectDouble(n.x, n.y, n.x + borderSize, n.y2, color);
+		if (right) drawRectDouble(n.x2, n.y, n.x2 + borderSize, n.y2 + borderSize, color);
+	}
+	
+	public static void drawRectDouble(double left, double top, double right, double bottom, int color) {
+        if (left < right) {
+            double i = left;
+            left = right;
+            right = i;
+        }
+
+        if (top < bottom) {
+        	double j = top;
+            top = bottom;
+            bottom = j;
+        }
+
+        float f3 = (float)(color >> 24 & 255) / 255.0F;
+        float f = (float)(color >> 16 & 255) / 255.0F;
+        float f1 = (float)(color >> 8 & 255) / 255.0F;
+        float f2 = (float)(color & 255) / 255.0F;
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.color(f, f1, f2, f3);
+        bufferbuilder.begin(7, DefaultVertexFormats.POSITION);
+        bufferbuilder.pos(left, bottom, 0.0D).endVertex();
+        bufferbuilder.pos(right, bottom, 0.0D).endVertex();
+        bufferbuilder.pos(right, top, 0.0D).endVertex();
+        bufferbuilder.pos(left, top, 0.0D).endVertex();
+        tessellator.draw();
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+	}
+	
+	//Update gui groups. So these are set when gui closes not the scrolled ones or the gui could go out of screen and confusion strikes
+	public static void updateGuiGroups() {
+		groupCoords.clear();
+		
+		for (Group group : Group.values()) {
+			groupCoords.add(new Point(group.x, group.y));
+		}
+	}
+	
+	public static void drawRect(int x, int y, int x2, int y2, int color) {
+		renderList.add(() -> GuiScreen.drawRect(x, y, x2, y2, color));
+	}
+	
+	public static void drawStringWithShadow(String text, float x, float y, int color) {
+		renderList.add(() -> mc.fontRenderer.drawStringWithShadow(text, x, y, color));
+	}
+	
+	public static void scale(float scale) {
+		renderList.add(() -> GlStateManager.scale(scale, scale, scale));
+	}
+	
+	public static void renderGames(int mouseX, int mouseY, float partialTicks) {
+		for (Mod module : Mod.modules) {
+			if (module.isOn()) {
+				module.onGuiDrawScreen(mouseX, mouseY, partialTicks);
+			}
+		}
 	}
 	
 	public static class GuiClick {

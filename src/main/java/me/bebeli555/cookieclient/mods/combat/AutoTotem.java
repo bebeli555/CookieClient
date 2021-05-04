@@ -1,14 +1,14 @@
 package me.bebeli555.cookieclient.mods.combat;
 
 import me.bebeli555.cookieclient.Mod;
+import me.bebeli555.cookieclient.events.bus.EventHandler;
+import me.bebeli555.cookieclient.events.bus.Listener;
 import me.bebeli555.cookieclient.events.player.PlayerMoveEvent;
 import me.bebeli555.cookieclient.gui.Group;
 import me.bebeli555.cookieclient.gui.Mode;
 import me.bebeli555.cookieclient.gui.Setting;
 import me.bebeli555.cookieclient.hud.components.ArrayListComponent;
 import me.bebeli555.cookieclient.utils.InventoryUtil;
-import me.zero.alpine.listener.EventHandler;
-import me.zero.alpine.listener.Listener;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiShulkerBox;
 import net.minecraft.init.Items;
@@ -30,6 +30,11 @@ public class AutoTotem extends Mod {
 	@Override
 	public void onEnabled() {
 		lastNumber = -1;
+		
+		//Turn off offhand otherwise their both trying to set stuff to offhand slot
+		if (Offhand.instance.isOn()) {
+			Offhand.instance.disable();
+		}
 	}
 	
 	@SubscribeEvent

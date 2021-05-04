@@ -4,16 +4,16 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import me.bebeli555.cookieclient.Mod;
+import me.bebeli555.cookieclient.events.bus.EventHandler;
+import me.bebeli555.cookieclient.events.bus.Listener;
 import me.bebeli555.cookieclient.events.player.PlayerUpdateEvent;
 import me.bebeli555.cookieclient.gui.Group;
 import me.bebeli555.cookieclient.gui.Mode;
 import me.bebeli555.cookieclient.gui.Setting;
-import me.bebeli555.cookieclient.rendering.RenderUtil;
 import me.bebeli555.cookieclient.rendering.RenderBlock.BlockColor;
+import me.bebeli555.cookieclient.rendering.RenderUtil;
 import me.bebeli555.cookieclient.utils.BlockUtil;
 import me.bebeli555.cookieclient.utils.Timer;
-import me.zero.alpine.listener.EventHandler;
-import me.zero.alpine.listener.Listener;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 
@@ -31,6 +31,11 @@ public class HoleESP extends Mod {
 	
 	public HoleESP() {
 		super(Group.RENDER, "HoleESP", "Render holes that u can go to", "To avoid crystal damage");
+	}
+	
+	@Override
+	public void onDisabled() {
+		holes.clear();
 	}
 	
     @EventHandler

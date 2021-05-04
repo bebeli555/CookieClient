@@ -49,7 +49,7 @@ public class Waypoints extends Mod {
 		public static Setting red = new Setting(boundingBox, Mode.INTEGER, "Red", 66, "Rbg color");
 		public static Setting green = new Setting(boundingBox, Mode.INTEGER, "Green", 245, "Rbg color");
 		public static Setting blue = new Setting(boundingBox, Mode.INTEGER, "Blue", 218, "Rbg color");
-		public static Setting alpha = new Setting(boundingBox, Mode.INTEGER, "Alpha", 255, "Rbg color");
+		public static Setting alpha = new Setting(boundingBox, Mode.INTEGER, "Alpha", 180, "Rbg color");
 	public static Setting name = new Setting(Mode.BOOLEAN, "Name", true, "Renders the name above the box");
 	
 	public Waypoints() {
@@ -137,9 +137,11 @@ public class Waypoints extends Mod {
 		        GlStateManager.rotate((float) (mc.getRenderManager().options.thirdPersonView == 2 ? -1 : 1) * mc.getRenderManager().playerViewX, 1.0F, 0.0F, 0.0F);
 		        GlStateManager.scale(-scale, -scale, -scale);
 		        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		        GlStateManager.disableDepth();
 		        
 		        mc.fontRenderer.drawStringWithShadow(ChatFormatting.GRAY + waypoint.name, -mc.fontRenderer.getStringWidth(waypoint.name) / 2, 0, -1);
 		        
+		        GlStateManager.enableDepth();
 		        GlStateManager.popMatrix();
 			}
 		}

@@ -9,6 +9,8 @@ import java.util.function.BooleanSupplier;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import me.bebeli555.cookieclient.events.bus.EventBus;
+import me.bebeli555.cookieclient.events.bus.EventManager;
 import me.bebeli555.cookieclient.gui.Group;
 import me.bebeli555.cookieclient.gui.GuiNode;
 import me.bebeli555.cookieclient.gui.GuiSettings;
@@ -33,6 +35,7 @@ import me.bebeli555.cookieclient.mods.combat.Offhand;
 import me.bebeli555.cookieclient.mods.combat.SelfWeb;
 import me.bebeli555.cookieclient.mods.combat.Surround;
 import me.bebeli555.cookieclient.mods.exploits.Burrow;
+import me.bebeli555.cookieclient.mods.exploits.LiquidInteract;
 import me.bebeli555.cookieclient.mods.exploits.MiningSpoof;
 import me.bebeli555.cookieclient.mods.exploits.NewChunks;
 import me.bebeli555.cookieclient.mods.exploits.PacketFly;
@@ -52,6 +55,7 @@ import me.bebeli555.cookieclient.mods.misc.DiscordRPC;
 import me.bebeli555.cookieclient.mods.misc.FakePlayer;
 import me.bebeli555.cookieclient.mods.misc.Friends;
 import me.bebeli555.cookieclient.mods.misc.MiddleClickFriends;
+import me.bebeli555.cookieclient.mods.misc.NoSound;
 import me.bebeli555.cookieclient.mods.misc.PacketCanceller;
 import me.bebeli555.cookieclient.mods.misc.UpdateChecker;
 import me.bebeli555.cookieclient.mods.misc.VisualRange;
@@ -97,6 +101,7 @@ import me.bebeli555.cookieclient.mods.render.Zoom;
 import me.bebeli555.cookieclient.mods.world.AutoBuilder;
 import me.bebeli555.cookieclient.mods.world.AutoEnderChestMiner;
 import me.bebeli555.cookieclient.mods.world.AutoFish;
+import me.bebeli555.cookieclient.mods.world.AutoRespawn;
 import me.bebeli555.cookieclient.mods.world.AutoTool;
 import me.bebeli555.cookieclient.mods.world.CrystalBlock;
 import me.bebeli555.cookieclient.mods.world.FastUse;
@@ -105,12 +110,11 @@ import me.bebeli555.cookieclient.mods.world.NoGlitchBlocks;
 import me.bebeli555.cookieclient.mods.world.PacketMine;
 import me.bebeli555.cookieclient.mods.world.Scaffold;
 import me.bebeli555.cookieclient.mods.world.SpeedMine;
+import me.bebeli555.cookieclient.mods.world.StashLogger;
 import me.bebeli555.cookieclient.mods.world.Timer;
 import me.bebeli555.cookieclient.rendering.Renderer;
 import me.bebeli555.cookieclient.utils.EatingUtil;
 import me.bebeli555.cookieclient.utils.InformationUtil;
-import me.zero.alpine.EventBus;
-import me.zero.alpine.EventManager;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -128,7 +132,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 public class Mod {
     public static final String MODID = "cookieclient";
     public static final String NAME = "CookieClient";
-    public static final String VERSION = "1.01-beta";
+    public static final String VERSION = "1.02-beta";
     public static final String DISCORD = "discord.gg/xSukBcyd8m";
     
     public static Minecraft mc = Minecraft.getMinecraft();
@@ -216,6 +220,7 @@ public class Mod {
     	new PacketFly();
     	new Reach();
     	new PortalGodMode();
+    	new LiquidInteract();
 		
     	//Misc
     	new AntiAFK();
@@ -234,6 +239,7 @@ public class Mod {
     	new UpdateChecker();
     	new VisualRange();
     	new XCarry();
+    	new NoSound();
 		
     	//Movement
     	new AntiHunger();
@@ -290,6 +296,8 @@ public class Mod {
     	new SpeedMine();
     	new Timer();
     	new AutoTool();
+    	new AutoRespawn();
+    	new StashLogger();
 		
     	//Games
 		new Snake();

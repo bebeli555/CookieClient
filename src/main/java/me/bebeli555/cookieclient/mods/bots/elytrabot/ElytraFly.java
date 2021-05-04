@@ -1,9 +1,9 @@
 package me.bebeli555.cookieclient.mods.bots.elytrabot;
 
 import me.bebeli555.cookieclient.Mod;
+import me.bebeli555.cookieclient.events.bus.EventHandler;
+import me.bebeli555.cookieclient.events.bus.Listener;
 import me.bebeli555.cookieclient.events.player.TravelEvent;
-import me.zero.alpine.listener.EventHandler;
-import me.zero.alpine.listener.Listener;
 import net.minecraft.util.math.BlockPos;
 
 public class ElytraFly extends Mod {
