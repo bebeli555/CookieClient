@@ -7,8 +7,7 @@ Currently supported versions: 1.12.2
 <br>
 
 # Downloading
-You can download CookieClient at the [releases](https://github.com/bebeli555/CookieClient/releases) tab. And select the latest version and download the `CookieClient-version-release.jar`. Then put the jar file to your mods folder and run minecraft with forge. You can also download it from the discord server or by building it yourself with the instructions below.
-<br>
+You can download CookieClient at the [releases](https://github.com/bebeli555/CookieClient/releases) tab. And select the latest version and download the `CookieClient-version-release.jar`. Then put the jar file to your mods folder and run minecraft with forge. You can also build it yourself with the instructions below.
 
 # Building
 You can build the project by running `gradlew setupDecompWorkspace` and `gradlew build`. If your using eclipse you also need to run `gradlew eclipse`. And for IntelliJ you need to run `gradlew genIntellijRuns`
