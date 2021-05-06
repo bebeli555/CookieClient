@@ -5,9 +5,6 @@ CookieClient is a utility client for anarchy servers. Its a forge mod so you nee
 <br>
 Currently supported versions: 1.12.2
 <br>
-<br>
-CookieClient is currently in BETA so it might have a bit of bugs and crashes. Remember to report them so they can be fixed!
-<br>
 
 # Downloading
 You can download CookieClient at the [releases](https://github.com/bebeli555/CookieClient/releases) tab. And select the latest version and download the `CookieClient-version-release.jar`. Then put the jar file to your mods folder and run minecraft with forge. You can also download it from the discord server or by building it yourself with the instructions below.
