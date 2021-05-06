@@ -32,6 +32,7 @@ import me.bebeli555.cookieclient.mods.combat.HoleFiller;
 import me.bebeli555.cookieclient.mods.combat.KillAura;
 import me.bebeli555.cookieclient.mods.combat.NoKnockback;
 import me.bebeli555.cookieclient.mods.combat.Offhand;
+import me.bebeli555.cookieclient.mods.combat.PistonAura;
 import me.bebeli555.cookieclient.mods.combat.SelfWeb;
 import me.bebeli555.cookieclient.mods.combat.Surround;
 import me.bebeli555.cookieclient.mods.exploits.Burrow;
@@ -46,6 +47,7 @@ import me.bebeli555.cookieclient.mods.games.tetris.Tetris;
 import me.bebeli555.cookieclient.mods.misc.AntiAFK;
 import me.bebeli555.cookieclient.mods.misc.AutoEat;
 import me.bebeli555.cookieclient.mods.misc.AutoFirework;
+import me.bebeli555.cookieclient.mods.misc.AutoHotbar;
 import me.bebeli555.cookieclient.mods.misc.AutoInventoryManager;
 import me.bebeli555.cookieclient.mods.misc.AutoMend;
 import me.bebeli555.cookieclient.mods.misc.AutoMessager;
@@ -132,7 +134,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 public class Mod {
     public static final String MODID = "cookieclient";
     public static final String NAME = "CookieClient";
-    public static final String VERSION = "1.02-beta";
+    public static final String VERSION = "1.0";
     public static final String DISCORD = "discord.gg/xSukBcyd8m";
     
     public static Minecraft mc = Minecraft.getMinecraft();
@@ -212,6 +214,7 @@ public class Mod {
     	new SelfWeb();
     	new Surround();
     	new Offhand();
+    	new PistonAura();
     	
     	//Exploits
     	new Burrow();
@@ -240,6 +243,7 @@ public class Mod {
     	new VisualRange();
     	new XCarry();
     	new NoSound();
+    	new AutoHotbar();
 		
     	//Movement
     	new AntiHunger();

@@ -43,6 +43,11 @@ public class AutoTotem extends Mod {
 			return;
 		}
 		
+		if (Offhand.toggleBackOn && mc.player.getHealth() + mc.player.getAbsorptionAmount() > Offhand.toggleHealth.doubleValue()) {
+			Offhand.instance.enable();
+			return;
+		}
+		
 		if (mc.player.getHeldItemOffhand().getItem() != Items.TOTEM_OF_UNDYING && InventoryUtil.hasItem(Items.TOTEM_OF_UNDYING) && !isContainerOpen()) {
 			if (stopMovement.booleanValue()) {
 				NoMovement.toggle(true);

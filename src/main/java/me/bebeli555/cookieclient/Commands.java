@@ -63,10 +63,9 @@ public class Commands extends Mod {
 							guiNode.toggled = Boolean.parseBoolean(value);
 							guiNode.setSetting();
 						} else {
-							try {
-								guiNode.setSetting();
-								
+							try {								
 								guiNode.stringValue = value;
+								guiNode.setSetting();
 							} catch (Exception ex) {
 								sendMessage("Wrong input. This might be caused if u input a string value and the setting only accepts integer or double", true);
 								return;

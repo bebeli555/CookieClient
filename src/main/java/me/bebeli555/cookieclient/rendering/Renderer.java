@@ -30,15 +30,16 @@ public class Renderer extends Mod {
 		//Draw status
 		if (status != null) {
 			for (int i = 0; i < status.length; i++) {
-				if (status[i] == null) {
+				String text = status[i];
+				if (text == null) {
 					continue;
 				}
 				
-				GuiScreen.drawRect(((mc.displayWidth / 4) - (mc.fontRenderer.getStringWidth(status[i]) / 2)) - 3, (i * 10) - 1, ((mc.displayWidth / 4) + (mc.fontRenderer.getStringWidth(status[i]) / 2)) + 3, (i + 1) * 10, 0xFF000000);
-				GuiScreen.drawRect(((mc.displayWidth / 4) - (mc.fontRenderer.getStringWidth(status[i]) / 2)) - 3, (i * 10) + 9, ((mc.displayWidth / 4) + (mc.fontRenderer.getStringWidth(status[i]) / 2)) + 3, (i + 1) * 10, 0xFF27f5be);
-				GuiScreen.drawRect(((mc.displayWidth / 4) - (mc.fontRenderer.getStringWidth(status[i]) / 2)) - 3, (i * 10) - 1, ((mc.displayWidth / 4) - (mc.fontRenderer.getStringWidth(status[i]) / 2)) - 2, (i + 1) * 10, 0xFF27f5be);
-				GuiScreen.drawRect(((mc.displayWidth / 4) + (mc.fontRenderer.getStringWidth(status[i]) / 2)) + 2, (i * 10) - 1, ((mc.displayWidth / 4) + (mc.fontRenderer.getStringWidth(status[i]) / 2)) + 3, (i + 1) * 10, 0xFF27f5be);
-				mc.fontRenderer.drawString(status[i], (mc.displayWidth / 4) - (mc.fontRenderer.getStringWidth(status[i]) / 2), i * 10, 0xFF000000);
+				GuiScreen.drawRect(((mc.displayWidth / 4) - (mc.fontRenderer.getStringWidth(text) / 2)) - 3, (i * 10) - 1, ((mc.displayWidth / 4) + (mc.fontRenderer.getStringWidth(text) / 2)) + 3, (i + 1) * 10, 0xFF000000);
+				GuiScreen.drawRect(((mc.displayWidth / 4) - (mc.fontRenderer.getStringWidth(text) / 2)) - 3, (i * 10) + 9, ((mc.displayWidth / 4) + (mc.fontRenderer.getStringWidth(text) / 2)) + 3, (i + 1) * 10, 0xFF27f5be);
+				GuiScreen.drawRect(((mc.displayWidth / 4) - (mc.fontRenderer.getStringWidth(text) / 2)) - 3, (i * 10) - 1, ((mc.displayWidth / 4) - (mc.fontRenderer.getStringWidth(text) / 2)) - 2, (i + 1) * 10, 0xFF27f5be);
+				GuiScreen.drawRect(((mc.displayWidth / 4) + (mc.fontRenderer.getStringWidth(text) / 2)) + 2, (i * 10) - 1, ((mc.displayWidth / 4) + (mc.fontRenderer.getStringWidth(text) / 2)) + 3, (i + 1) * 10, 0xFF27f5be);
+				mc.fontRenderer.drawString(text, (mc.displayWidth / 4) - (mc.fontRenderer.getStringWidth(text) / 2), i * 10, 0xFF000000);
 			}
 		}
 		

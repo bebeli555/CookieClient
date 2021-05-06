@@ -142,6 +142,7 @@ public class BlockUtil extends Mod {
 	public static void placeBlockOnThisThread(Block block, BlockPos pos, boolean spoofRotation) {
 		new Place(null, block, pos, spoofRotation).onTick(null);
 	}
+	
 	/**
 	 * Same as the placeBlock but it interacts with the given block with the given item
 	 * This is run on the client thread
@@ -154,6 +155,10 @@ public class BlockUtil extends Mod {
 	
 	public static void placeItemNoSleep(Item item, BlockPos pos, boolean spoofRotation) {
 		new Place(item, null, pos, spoofRotation);
+	}
+	
+	public static void placeItemOnThisThread(Item item, BlockPos pos, boolean spoofRotation) {
+		new Place(item, null, pos, spoofRotation).onTick(null);
 	}
 	
 	/**

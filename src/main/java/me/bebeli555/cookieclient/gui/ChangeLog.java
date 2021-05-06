@@ -12,6 +12,13 @@ public class ChangeLog extends Mod {
 	
 	public static String[] getChangeLog() {
 		String[] changelog = {
+				"version: v1.0",
+				"- Release!",
+				"- Added PistonAura",
+				"- Added AutoHotbar",
+				"- Improved Step",
+				"- Fixed some bugs",
+				"",
 				"version: v1.02-beta",
 				"- Added StashLogger",
 				"- Added AutoRespawn",

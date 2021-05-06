@@ -64,7 +64,7 @@ public class Gui extends GuiScreen {
 		float guiScale = (float)((float)mc.displayWidth / resolution.getWidth());
 		this.setGuiSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
 		
-		guiScale = (float)getGuiScale(guiScale);
+		guiScale = (float)getGuiScale(guiScale) + (float)GuiSettings.scale.doubleValue();
 		final int mouseX = (int)(mouseX2 / guiScale);
 		final int mouseY = (int)(mouseY2 / guiScale);
 		

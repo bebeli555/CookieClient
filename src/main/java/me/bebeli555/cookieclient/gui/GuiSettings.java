@@ -41,6 +41,7 @@ public class GuiSettings extends Mod {
 		public static Setting groupScale = new Setting(guiSettings, Mode.DOUBLE, "Group scale", 1.25, "The group text scale");
 		public static Setting groupBackground = new Setting(guiSettings, Mode.TEXT, "Group background", "0x3650b57c", "The group background color");
 		public static Setting scrollAmount = new Setting(guiSettings, Mode.INTEGER, "ScrollAmount", 15, "How many things to scroll with one wheel scroll");
+		public static Setting scale = new Setting(guiSettings, Mode.DOUBLE, "Scale", 0, "How much more to scale it than default", "Higher = bigger", "You should only change this if the default scale is messed up");
 		public static Setting scrollSave = new Setting(guiSettings, Mode.BOOLEAN, "ScrollSave", false, "Doesnt reset mouse scrolled position if true");
 		public static Setting infoBox = new Setting(guiSettings, Mode.BOOLEAN, "InfoBox", true, "Shows the left top info box thing");
 		public static Setting changelog = new Setting(guiSettings, Mode.BOOLEAN, "Changelog", true, "Shows changelog in gui");
