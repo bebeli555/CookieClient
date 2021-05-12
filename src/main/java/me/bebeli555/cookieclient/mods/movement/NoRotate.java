@@ -22,32 +22,17 @@ public class NoRotate extends Mod {
             	event.cancel();
             	
                 EntityPlayer player = mc.player;
-                final SPacketPlayerPosLook packetIn = (SPacketPlayerPosLook)event.packet;
-                double d0 = packetIn.getX();
-                double d1 = packetIn.getY();
-                double d2 = packetIn.getZ();
+                final SPacketPlayerPosLook packetIn = (SPacketPlayerPosLook) event.packet;
+		
+		float serverYaw = packetIn.getYaw();
+		float serverPitch = packetIn.getPitch();
+                double serverX = packetIn.getX();
+                double serverY = packetIn.getY();
+                double serverZ = packetIn.getZ();
 
-                if (packetIn.getFlags().contains(SPacketPlayerPosLook.EnumFlags.X)) {
-                    d0 += player.posX;
-                } else {
-                	player.motionX = 0.0D;
-                }
-
-                if (packetIn.getFlags().contains(SPacketPlayerPosLook.EnumFlags.Y)) {
-                    d1 += player.posY;
-                } else {
-                	player.motionY = 0.0D;
-                }
-
-                if (packetIn.getFlags().contains(SPacketPlayerPosLook.EnumFlags.Z)) {
-                    d2 += player.posZ;
-                } else {
-                	player.motionZ = 0.0D;
-                }
-                
-                player.setPosition(d0, d1, d2);
+                player.setPosition(serverX, serverY, serverZ);
                 mc.getConnection().sendPacket(new CPacketConfirmTeleport(packetIn.getTeleportId()));
-                mc.getConnection().sendPacket(new CPacketPlayer.PositionRotation(player.posX, player.getEntityBoundingBox().minY, player.posZ, packetIn.getYaw(), packetIn.getPitch(), false));
+                mc.getConnection().sendPacket(new CPacketPlayer.PositionRotation(serverX, serverY, serverZ, serverYaw, serverPitch, false));
             }
         }
     });
