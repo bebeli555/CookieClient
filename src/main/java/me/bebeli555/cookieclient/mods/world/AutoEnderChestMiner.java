@@ -73,7 +73,7 @@ public class AutoEnderChestMiner extends Mod {
 		}
 
 		if (availableSpot != null) {
-			Surround.centerMotion();
+			Surround.centerMotionFull();
 			BlockUtil.placeBlock(Blocks.ENDER_CHEST, availableSpot, true);
 			sleep(delay.intValue());
 		} else {

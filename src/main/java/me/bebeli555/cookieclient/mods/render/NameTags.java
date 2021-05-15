@@ -51,7 +51,7 @@ public class NameTags extends Mod {
 	public static Setting health = new Setting(Mode.BOOLEAN, "Health", true, "Shows their health + absortion");
 	public static Setting ping = new Setting(Mode.BOOLEAN, "Ping", true, "Shows their ping");
 	public static Setting popCounter = new Setting(Mode.BOOLEAN, "PopCounter", true, "Displays how many times the people have", "Popped a totem next to their health");
-		public static Setting popCounterReset = new Setting(Mode.BOOLEAN, "Reset", true, "Resets the counter when the entity", "Goes out of render distance");
+		public static Setting popCounterReset = new Setting(popCounter, Mode.BOOLEAN, "Reset", true, "Resets the counter when the entity", "Goes out of render distance");
 		
 	public NameTags() {
 		super(Group.RENDER, "NameTags", "Renders useful information about the player", "Above them");
@@ -222,9 +222,9 @@ public class NameTags extends Mod {
 						renderedArmor = true;
 
 						if (enchantments.booleanValue()) {
+							int y = -2;
 							ArrayList<String> stringsToDraw = new ArrayList<String>();
 
-							int y = -2;
 							if (stack.getEnchantmentTagList() != null) {
 								NBTTagList tags = stack.getEnchantmentTagList();
 								

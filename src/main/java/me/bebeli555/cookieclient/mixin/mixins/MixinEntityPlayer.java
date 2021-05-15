@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import me.bebeli555.cookieclient.Mod;
+import me.bebeli555.cookieclient.events.entity.AttackEntityEvent;
 import me.bebeli555.cookieclient.events.entity.EntityJumpEvent;
 import me.bebeli555.cookieclient.events.entity.EntityPushEvent;
 import me.bebeli555.cookieclient.events.player.TravelEvent;
@@ -57,6 +58,16 @@ public abstract class MixinEntityPlayer extends EntityLivingBase {
     @Inject(method = "jump", at = @At("HEAD"), cancellable = true)
     public void jump(CallbackInfo callbackInfo) {
     	EntityJumpEvent event = new EntityJumpEvent((EntityPlayer)(Object)this);
+    	Mod.EVENT_BUS.post(event);
+    	
+    	if (event.isCancelled()) {
+    		callbackInfo.cancel();
+    	}
+    }
+    
+    @Inject(method = "attackTargetEntityWithCurrentItem", at = @At("HEAD"), cancellable = true)
+    public void attackTargetEntityWithCurrentItem(Entity target, CallbackInfo callbackInfo) {
+    	AttackEntityEvent event = new AttackEntityEvent(target);
     	Mod.EVENT_BUS.post(event);
     	
     	if (event.isCancelled()) {

@@ -170,7 +170,7 @@ public class KillAura extends Mod {
 	}
 	
 	//This is from minecrafts source code but just removed the thing where it stops sprinting after a hit
-    public void attackTargetEntityWithCurrentItem(Entity targetEntity) {
+    public static void attackTargetEntityWithCurrentItem(Entity targetEntity) {
         if (targetEntity.canBeAttackedWithItem()) {
             if (!targetEntity.hitByEntity(mc.player)) {
                 float f = (float)mc.player.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();

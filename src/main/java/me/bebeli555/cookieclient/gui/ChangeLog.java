@@ -12,6 +12,17 @@ public class ChangeLog extends Mod {
 	
 	public static String[] getChangeLog() {
 		String[] changelog = {
+				"version: v1.01",
+				"- Added AutoEnderpearl",
+				"- Added Hit to NoSlowDown",
+				"- Added ToggleOnSneak to Surround",
+				"- Added ToggleOnJump to Surround",
+				"- Added RenderBroken to PacketMine",
+				"- Added EnderChest setting to Burrow",
+				"- Added Potion amplifier to HUD-Potions",
+				"- Fixed AutoHotbar bug in GUIs",
+				"- Fixed NoRotate Desyncing",
+				"",
 				"version: v1.0",
 				"- Release!",
 				"- Added PistonAura",
