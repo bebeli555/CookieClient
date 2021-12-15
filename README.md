@@ -15,7 +15,7 @@ You can open GUI with `++gui` command and then later bind it to some key in GUI 
 You can download CookieClient at the [releases](https://github.com/bebeli555/CookieClient/releases) tab. And select the latest version and download the `CookieClient-version-release.jar`. Then put the jar file to your mods folder and run minecraft with forge. You can also build it yourself with the instructions below.
 
 # Building
-You can build the project by running `gradlew setupDecompWorkspace` and `gradlew build`. If your using eclipse you also need to run `gradlew eclipse`. And for IntelliJ you need to run `gradlew genIntellijRuns`
+You can build the project by running `gradlew eclipse` and `gradlew genEclipseRuns` then `gradlew build` or in intellij just by running `gradlew genIntellijRuns` then `gradlew build` then the built jar will be in build/libs. You need JDK 8 to build it newer versions of java wont work i think.
 <br>
 
 # Contributing
