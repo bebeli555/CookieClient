@@ -8,7 +8,6 @@ import net.minecraft.init.Blocks;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
-@SuppressWarnings("deprecation")
 public class IceSpeed extends Mod {
 	public static Setting speed = new Setting(Mode.DOUBLE, "Speed", 1, "How slippery it will make the ice", "Vanilla value = 0.97");
 	

@@ -12,6 +12,11 @@ public class ChangeLog extends Mod {
 	
 	public static String[] getChangeLog() {
 		String[] changelog = {
+				"version: v1.02",
+				"- Added AutoSign",
+				"- Updated forgegradle version",
+				"- Removed DiscordRPC",
+				"",
 				"version: v1.01",
 				"- Added AutoEnderpearl",
 				"- Added Hit to NoSlowDown",

@@ -53,7 +53,6 @@ import me.bebeli555.cookieclient.mods.misc.AutoMend;
 import me.bebeli555.cookieclient.mods.misc.AutoMessager;
 import me.bebeli555.cookieclient.mods.misc.AutoReconnect;
 import me.bebeli555.cookieclient.mods.misc.ChestSwap;
-import me.bebeli555.cookieclient.mods.misc.DiscordRPC;
 import me.bebeli555.cookieclient.mods.misc.FakePlayer;
 import me.bebeli555.cookieclient.mods.misc.Friends;
 import me.bebeli555.cookieclient.mods.misc.MiddleClickFriends;
@@ -105,6 +104,7 @@ import me.bebeli555.cookieclient.mods.world.AutoEnderChestMiner;
 import me.bebeli555.cookieclient.mods.world.AutoEnderpearl;
 import me.bebeli555.cookieclient.mods.world.AutoFish;
 import me.bebeli555.cookieclient.mods.world.AutoRespawn;
+import me.bebeli555.cookieclient.mods.world.AutoSign;
 import me.bebeli555.cookieclient.mods.world.AutoTool;
 import me.bebeli555.cookieclient.mods.world.CrystalBlock;
 import me.bebeli555.cookieclient.mods.world.FastUse;
@@ -135,7 +135,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 public class Mod {
     public static final String MODID = "cookieclient";
     public static final String NAME = "CookieClient";
-    public static final String VERSION = "1.01";
+    public static final String VERSION = "1.02";
     public static final String DISCORD = "discord.gg/xSukBcyd8m";
     
     public static Minecraft mc = Minecraft.getMinecraft();
@@ -235,7 +235,7 @@ public class Mod {
     	new AutoMessager();
     	new AutoReconnect();
     	new ChestSwap();
-    	try {new DiscordRPC();} catch(UnsatisfiedLinkError e) {}
+    	//try {new DiscordRPC();} catch(UnsatisfiedLinkError e) {}
     	new FakePlayer();
     	new Friends();
     	new MiddleClickFriends();
@@ -304,6 +304,7 @@ public class Mod {
     	new AutoRespawn();
     	new StashLogger();
     	new AutoEnderpearl();
+    	new AutoSign();
 		
     	//Games
 		new Snake();
@@ -528,7 +529,6 @@ public class Mod {
 		Renderer.status = null;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static void suspend(Thread thread) {
 		if (thread != null) thread.suspend();
 	}

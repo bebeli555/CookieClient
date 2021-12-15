@@ -44,6 +44,6 @@ public class GuiSettings extends Mod {
 		public static Setting scale = new Setting(guiSettings, Mode.DOUBLE, "Scale", 0, "How much more to scale it than default", "Higher = bigger", "You should only change this if the default scale is messed up");
 		public static Setting scrollSave = new Setting(guiSettings, Mode.BOOLEAN, "ScrollSave", false, "Doesnt reset mouse scrolled position if true");
 		public static Setting infoBox = new Setting(guiSettings, Mode.BOOLEAN, "InfoBox", true, "Shows the left top info box thing");
-		public static Setting changelog = new Setting(guiSettings, Mode.BOOLEAN, "Changelog", true, "Shows changelog in gui");
+		public static Setting changelog = new Setting(guiSettings, Mode.BOOLEAN, "Changelog", false, "Shows changelog in gui");
 	public static Setting prefix = new Setting(Mode.TEXT, "Prefix", "++", "The prefix for commands");
 }
