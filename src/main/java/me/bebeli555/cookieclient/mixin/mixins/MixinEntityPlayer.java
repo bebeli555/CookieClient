@@ -1,5 +1,6 @@
 package me.bebeli555.cookieclient.mixin.mixins;
 
+import me.bebeli555.cookieclient.mods.misc.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

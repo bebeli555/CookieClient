@@ -7,8 +7,10 @@ import me.bebeli555.cookieclient.events.player.TravelEvent;
 import me.bebeli555.cookieclient.gui.Group;
 import me.bebeli555.cookieclient.gui.Mode;
 import me.bebeli555.cookieclient.gui.Setting;
+import me.bebeli555.cookieclient.mods.misc.Debug;
 import me.bebeli555.cookieclient.mods.render.Freecam;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.util.math.Vec3d;
@@ -30,7 +32,7 @@ public class EntitySpeed extends Mod {
     		return;
     	}
     	
-    	if (mc.player.ridingEntity instanceof EntityPig || mc.player.ridingEntity instanceof AbstractHorse && mc.player.ridingEntity.getControllingPassenger().equals(mc.player)) {
+    	if (mc.player.ridingEntity instanceof EntityBoat || mc.player.ridingEntity instanceof EntityPig || mc.player.ridingEntity instanceof AbstractHorse && mc.player.ridingEntity.getControllingPassenger().equals(mc.player)) {
     		moveEntity(mc.player.ridingEntity, speed.doubleValue(), antiStuck.booleanValue());
     		
     		if (mc.player.ridingEntity instanceof AbstractHorse) {
@@ -61,7 +63,7 @@ public class EntitySpeed extends Mod {
 	}
 	
 	public static boolean isInputting() {
-		return mc.gameSettings.keyBindForward.isKeyDown() || mc.gameSettings.keyBindBack.isKeyDown() || mc.gameSettings.keyBindRight.isKeyDown() || mc.gameSettings.keyBindLeft.isKeyDown();
+		return mc.player.movementInput.moveForward != 0 || mc.player.movementInput.moveStrafe != 0;
 	}
 	
 	public static void fly(Entity entity) {

@@ -8,6 +8,7 @@ import me.bebeli555.cookieclient.gui.Gui;
 import me.bebeli555.cookieclient.gui.GuiSettings;
 import me.bebeli555.cookieclient.hud.HudComponent;
 import me.bebeli555.cookieclient.hud.HudEditor;
+import me.bebeli555.cookieclient.mods.misc.Debug;
 import me.bebeli555.cookieclient.rendering.RenderBlock.BlockColor;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -26,7 +27,7 @@ public class Renderer extends Mod {
 		if (mc.player == null) {
 			return;
 		}
-		
+
 		//Draw status
 		if (status != null) {
 			for (int i = 0; i < status.length; i++) {
@@ -34,12 +35,19 @@ public class Renderer extends Mod {
 				if (text == null) {
 					continue;
 				}
-				
-				GuiScreen.drawRect(((mc.displayWidth / 4) - (mc.fontRenderer.getStringWidth(text) / 2)) - 3, (i * 10) - 1, ((mc.displayWidth / 4) + (mc.fontRenderer.getStringWidth(text) / 2)) + 3, (i + 1) * 10, 0xFF000000);
-				GuiScreen.drawRect(((mc.displayWidth / 4) - (mc.fontRenderer.getStringWidth(text) / 2)) - 3, (i * 10) + 9, ((mc.displayWidth / 4) + (mc.fontRenderer.getStringWidth(text) / 2)) + 3, (i + 1) * 10, 0xFF27f5be);
-				GuiScreen.drawRect(((mc.displayWidth / 4) - (mc.fontRenderer.getStringWidth(text) / 2)) - 3, (i * 10) - 1, ((mc.displayWidth / 4) - (mc.fontRenderer.getStringWidth(text) / 2)) - 2, (i + 1) * 10, 0xFF27f5be);
-				GuiScreen.drawRect(((mc.displayWidth / 4) + (mc.fontRenderer.getStringWidth(text) / 2)) + 2, (i * 10) - 1, ((mc.displayWidth / 4) + (mc.fontRenderer.getStringWidth(text) / 2)) + 3, (i + 1) * 10, 0xFF27f5be);
-				mc.fontRenderer.drawString(text, (mc.displayWidth / 4) - (mc.fontRenderer.getStringWidth(text) / 2), i * 10, 0xFF000000);
+
+				GlStateManager.pushMatrix();
+				double guiScale = Gui.getGuiScale(1);
+				GlStateManager.scale(guiScale, guiScale, guiScale);
+
+				int width = mc.fontRenderer.getStringWidth(text);
+				GuiScreen.drawRect(((mc.displayWidth / 4) - (width / 2)) - 3, (i * 10) - 1, ((mc.displayWidth / 4) + (width / 2)) + 3, (i + 1) * 10, 0xFF000000);
+				GuiScreen.drawRect(((mc.displayWidth / 4) - (width / 2)) - 3, (i * 10) + 9, ((mc.displayWidth / 4) + (width / 2)) + 3, (i + 1) * 10, 0xFF27f5be);
+				GuiScreen.drawRect(((mc.displayWidth / 4) - (width / 2)) - 3, (i * 10) - 1, ((mc.displayWidth / 4) - (width / 2)) - 2, (i + 1) * 10, 0xFF27f5be);
+				GuiScreen.drawRect(((mc.displayWidth / 4) + (width / 2)) + 2, (i * 10) - 1, ((mc.displayWidth / 4) + (width / 2)) + 3, (i + 1) * 10, 0xFF27f5be);
+				mc.fontRenderer.drawString(text, (mc.displayWidth / 4) - (width / 2), i * 10, 0xFF000000);
+
+				GlStateManager.popMatrix();
 			}
 		}
 		
@@ -47,12 +55,25 @@ public class Renderer extends Mod {
 		if (!HudEditor.module.isOn()) {
 			if (!GuiSettings.hud.booleanValue()) return;
 			GlStateManager.pushMatrix();
-			double guiScale = Gui.getGuiScale(1);
+			double guiScale = Gui.getGuiScale((float)(1 + GuiSettings.hudScale.doubleValue()));
+			double defaultGuiScale = Gui.getGuiScale(1);
 			GlStateManager.scale(guiScale, guiScale, guiScale);
 			
 			for (HudComponent component : HudComponent.components) {
 				if (component.shouldRender()) {
+					if (!component.applyScaling) {
+						GlStateManager.popMatrix();
+						GlStateManager.pushMatrix();
+						GlStateManager.scale(defaultGuiScale, defaultGuiScale, defaultGuiScale);
+					}
+
 					component.onRender(e.getPartialTicks());
+
+					if (!component.applyScaling) {
+						GlStateManager.popMatrix();
+						GlStateManager.pushMatrix();
+						GlStateManager.scale(guiScale, guiScale, guiScale);
+					}
 				}
 			}
 			

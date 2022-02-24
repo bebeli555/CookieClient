@@ -3,6 +3,7 @@ package me.bebeli555.cookieclient.gui;
 import java.util.ArrayList;
 
 import me.bebeli555.cookieclient.Mod;
+import me.bebeli555.cookieclient.mods.misc.Debug;
 
 public class GuiNode extends Mod {
 	public static ArrayList<GuiNode> all = new ArrayList<GuiNode>();
@@ -80,11 +81,13 @@ public class GuiNode extends Mod {
 	
 	//Sets this to the default value
 	public void setDefaultValue() {
-		if (this.isTypeable) {
+		if (this.isTypeable || !this.modes.isEmpty()) {
 			stringValue = defaultValue;
 		} else {
 			toggled = Boolean.parseBoolean(defaultValue);
 		}
+
+		setSetting();
 	}
 	
 	//Gets called when this node is clicked on the gui
@@ -140,7 +143,7 @@ public class GuiNode extends Mod {
  			isExtended = extend;
  			
  			//Un extend all the other nodes that parent the extends too
- 			if (extend == false) {
+ 			if (!extend) {
  	 			for (GuiNode n : all) {
  	 				if (n.id.contains(node.id)) {  	 					
  	 					n.isVisible = false;

@@ -161,7 +161,7 @@ public class Settings extends Mod {
 	 */
 	public static GuiNode getGuiNodeFromId(String id) {
 		for (GuiNode node : GuiNode.all) {
-			if (node.id.equals(id)) {
+			if (node.id.equalsIgnoreCase(id)) {
 				return node;
 			}
 		}

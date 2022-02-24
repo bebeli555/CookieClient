@@ -44,23 +44,7 @@ import me.bebeli555.cookieclient.mods.exploits.PortalGodMode;
 import me.bebeli555.cookieclient.mods.exploits.Reach;
 import me.bebeli555.cookieclient.mods.games.Snake;
 import me.bebeli555.cookieclient.mods.games.tetris.Tetris;
-import me.bebeli555.cookieclient.mods.misc.AntiAFK;
-import me.bebeli555.cookieclient.mods.misc.AutoEat;
-import me.bebeli555.cookieclient.mods.misc.AutoFirework;
-import me.bebeli555.cookieclient.mods.misc.AutoHotbar;
-import me.bebeli555.cookieclient.mods.misc.AutoInventoryManager;
-import me.bebeli555.cookieclient.mods.misc.AutoMend;
-import me.bebeli555.cookieclient.mods.misc.AutoMessager;
-import me.bebeli555.cookieclient.mods.misc.AutoReconnect;
-import me.bebeli555.cookieclient.mods.misc.ChestSwap;
-import me.bebeli555.cookieclient.mods.misc.FakePlayer;
-import me.bebeli555.cookieclient.mods.misc.Friends;
-import me.bebeli555.cookieclient.mods.misc.MiddleClickFriends;
-import me.bebeli555.cookieclient.mods.misc.NoSound;
-import me.bebeli555.cookieclient.mods.misc.PacketCanceller;
-import me.bebeli555.cookieclient.mods.misc.UpdateChecker;
-import me.bebeli555.cookieclient.mods.misc.VisualRange;
-import me.bebeli555.cookieclient.mods.misc.XCarry;
+import me.bebeli555.cookieclient.mods.misc.*;
 import me.bebeli555.cookieclient.mods.movement.AntiHunger;
 import me.bebeli555.cookieclient.mods.movement.AntiLevitation;
 import me.bebeli555.cookieclient.mods.movement.AutoSprint;
@@ -135,7 +119,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 public class Mod {
     public static final String MODID = "cookieclient";
     public static final String NAME = "CookieClient";
-    public static final String VERSION = "1.02";
+    public static final String VERSION = "1.03";
     public static final String DISCORD = "discord.gg/xSukBcyd8m";
     
     public static Minecraft mc = Minecraft.getMinecraft();
@@ -245,6 +229,7 @@ public class Mod {
     	new XCarry();
     	new NoSound();
     	new AutoHotbar();
+		new Debug();
 		
     	//Movement
     	new AntiHunger();
@@ -352,27 +337,37 @@ public class Mod {
     /**
      * Sends a clientSided message
      * @param red if true then message will be red if false then it will be some other color
-     * @param name of the module it will add in the message
-     * @param remove removes all the past messages made by the mod if true
+     * @param text of the module it will add in the message
+     * @param red renders text as red
      */
     public void sendMessage(String text, boolean red) {
-    	if (mc.player == null) {
-    		return;
-    	}
-
-    	//Send message
-    	String module = "";
-    	ChatFormatting color = ChatFormatting.WHITE;
-    	if (red) {
-    		color = ChatFormatting.RED;
-    	}
-    	if (!name.isEmpty()) {
-    		module = "-" + name;
-    	}
-    	
-    	mc.player.sendMessage(new TextComponentString(ChatFormatting.GREEN + "[" + ChatFormatting.LIGHT_PURPLE + NAME + module + ChatFormatting.GREEN + "] " + color + text));
+		sendMessage(text, red, name);
     }
-    
+
+	/**
+	 * Sends a clientSided message
+	 * @param text of the module it will add in the message
+	 * @param red renders text as red
+	 * @param moduleName module name to send in message
+	 */
+	public static void sendMessage(String text, boolean red, String moduleName) {
+		if (mc.player == null) {
+			return;
+		}
+
+		//Send message
+		String module = "";
+		ChatFormatting color = ChatFormatting.WHITE;
+		if (red) {
+			color = ChatFormatting.RED;
+		}
+		if (!moduleName.isEmpty()) {
+			module = "-" + moduleName;
+		}
+
+		mc.player.sendMessage(new TextComponentString(ChatFormatting.GREEN + "[" + ChatFormatting.LIGHT_PURPLE + NAME + module + ChatFormatting.GREEN + "] " + color + text));
+	}
+
     public int getRenderNumber() {
     	return this.renderNumber;
     }

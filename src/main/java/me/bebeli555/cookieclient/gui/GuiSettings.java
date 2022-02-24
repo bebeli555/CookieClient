@@ -8,6 +8,7 @@ public class GuiSettings extends Mod {
 	}
 	
 	public static Setting hud = new Setting(Mode.BOOLEAN, "HUD", true, "Settings about the HUD");
+		public static Setting hudScale = new Setting(hud, Mode.DOUBLE, "Scale", 0, "How much more to scale it than default", "Higher = bigger");
 		public static Setting arrayList = new Setting(hud, Mode.BOOLEAN, "ArrayList", true, "Shows the toggled modules");
 		public static Setting arrayListColorMode = new Setting(arrayList, "Color", "Rainbow", new String[]{"Green"}, new String[]{"Rainbow"});
 			public static Setting arrayListRainbowStatic = new Setting(arrayListColorMode, "Rainbow", Mode.BOOLEAN, "Static", false, "All modules change to same rainbow", "If false then they change differently");
@@ -28,6 +29,7 @@ public class GuiSettings extends Mod {
 		public static Setting infoShadow = new Setting(hud, Mode.BOOLEAN, "InfoShadow", true, "Draws the strings with shadow that are in", "The top right corner at default");
 		public static Setting portalGui = new Setting(hud, Mode.BOOLEAN, "PortalGui", true, "Allows you to open guis in portals");
 	public static Setting guiSettings = new Setting(Mode.LABEL, "GUI", true, "Settings about the GUI design");
+		public static Setting scale = new Setting(guiSettings, Mode.DOUBLE, "Scale", 0, "How much more to scale it than default", "Higher = bigger");
 		public static Setting width = new Setting(guiSettings, Mode.INTEGER, "Width", 90, "Gui node width");
 		public static Setting height = new Setting(guiSettings, Mode.INTEGER, "Height", 17, "Gui node height");
 		public static Setting borderColor = new Setting(guiSettings, Mode.TEXT, "Border color", "0xFF32a86d", "Color of the border in hex and with 0xAA");
@@ -41,9 +43,32 @@ public class GuiSettings extends Mod {
 		public static Setting groupScale = new Setting(guiSettings, Mode.DOUBLE, "Group scale", 1.25, "The group text scale");
 		public static Setting groupBackground = new Setting(guiSettings, Mode.TEXT, "Group background", "0x3650b57c", "The group background color");
 		public static Setting scrollAmount = new Setting(guiSettings, Mode.INTEGER, "ScrollAmount", 15, "How many things to scroll with one wheel scroll");
-		public static Setting scale = new Setting(guiSettings, Mode.DOUBLE, "Scale", 0, "How much more to scale it than default", "Higher = bigger", "You should only change this if the default scale is messed up");
 		public static Setting scrollSave = new Setting(guiSettings, Mode.BOOLEAN, "ScrollSave", false, "Doesnt reset mouse scrolled position if true");
 		public static Setting infoBox = new Setting(guiSettings, Mode.BOOLEAN, "InfoBox", true, "Shows the left top info box thing");
 		public static Setting changelog = new Setting(guiSettings, Mode.BOOLEAN, "Changelog", false, "Shows changelog in gui");
 	public static Setting prefix = new Setting(Mode.TEXT, "Prefix", "++", "The prefix for commands");
+
+	static {
+		hudScale.addValueChangedListener(new Setting.ValueChangedListener(null, false) {
+			@Override
+			public void valueChanged() {
+				if ((hudScale.doubleValue() > 1 || hudScale.doubleValue() < -0.5) && mc.player != null) {
+					Mod.sendMessage("The set hudScale value is not allowed. Allowed values are -0.5 to 1.0. Set back to default", true, "GUI");
+					hudScale.setValue(0);
+					Settings.getGuiNodeFromId(hudScale.id).stringValue = "0";
+				}
+			}
+		});
+
+		scale.addValueChangedListener(new Setting.ValueChangedListener(null, false) {
+			@Override
+			public void valueChanged() {
+				if ((scale.doubleValue() > 1 || scale.doubleValue() < -1) && mc.player != null) {
+					Mod.sendMessage("The set GUIScale value is not allowed. Allowed values are -1 to 1. Set back to default. If you end up messing the GUIScaling then type ++set GUISCale 0", true, "GUI");
+					scale.setValue(0);
+					Settings.getGuiNodeFromId(scale.id).stringValue = "0";
+				}
+			}
+		});
+	}
 }

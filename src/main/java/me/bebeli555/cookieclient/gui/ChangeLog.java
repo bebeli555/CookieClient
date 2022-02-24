@@ -12,6 +12,17 @@ public class ChangeLog extends Mod {
 	
 	public static String[] getChangeLog() {
 		String[] changelog = {
+				"version: v1.03",
+				"- Boats now work for EntitySpeed",
+				"- AutoCrystal now places on more legit block facings",
+				"- Fixed GUI scaling issues. Now it should work on Auto scale too",
+				"- Added scaling option for HUD",
+				"- EntitySpeed and other movement modules now work when GUI's are open",
+				"- AutoWalk now works when GUI's are open too",
+				"- Added Debug module (only for development)",
+				"- Commands are no longer case sensitive",
+				"- Added Button to reset module's default settings",
+				"",
 				"version: v1.02",
 				"- Added AutoSign",
 				"- Updated forgegradle version",

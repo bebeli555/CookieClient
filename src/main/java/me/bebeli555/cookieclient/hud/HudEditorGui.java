@@ -1,5 +1,6 @@
 package me.bebeli555.cookieclient.hud;
 
+import me.bebeli555.cookieclient.gui.GuiSettings;
 import org.lwjgl.input.Mouse;
 
 import me.bebeli555.cookieclient.Mod;
@@ -32,7 +33,8 @@ public class HudEditorGui extends GuiScreen {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		GlStateManager.pushMatrix();
-		double guiScale = Gui.getGuiScale(1);
+		double guiScale = Gui.getGuiScale(1 + (float)GuiSettings.hudScale.doubleValue());
+		double defaultGuiScale = Gui.getGuiScale(1);
 		GlStateManager.scale(guiScale, guiScale, guiScale);
 		
 		this.setGuiSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
@@ -41,7 +43,7 @@ public class HudEditorGui extends GuiScreen {
 		mouseX = (int)(mouseX / guiScale);
 		mouseY = (int)(mouseY / guiScale);
 		
-		//Render rectangle below the components
+		//Render rectangle under the components
 		for (HudComponent component : HudComponent.components) {
 			if (component.shouldRender()) {
 				for (HudPoint point : component.renderedPoints) {
@@ -54,7 +56,19 @@ public class HudEditorGui extends GuiScreen {
 		//So the rectangles dont overlay the text
 		for (HudComponent component : HudComponent.components) {
 			if (component.shouldRender()) {
+				if (!component.applyScaling) {
+					GlStateManager.popMatrix();
+					GlStateManager.pushMatrix();
+					GlStateManager.scale(defaultGuiScale, defaultGuiScale, defaultGuiScale);
+				}
+
 				component.onRender(partialTicks);
+
+				if (!component.applyScaling) {
+					GlStateManager.popMatrix();
+					GlStateManager.pushMatrix();
+					GlStateManager.scale(guiScale, guiScale, guiScale);
+				}
 			}
 		}
 		

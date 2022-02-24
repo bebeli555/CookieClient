@@ -117,7 +117,29 @@ public class SetGuiNodes {
 				hidden.group = module.group;
 				hidden.name = "Hidden";
 				hidden.setId();
-				
+
+				GuiNode resetDefaults = new GuiNode();
+				resetDefaults.isVisible = false;
+				mainNode.parentedNodes.add(resetDefaults);
+				resetDefaults.description = new String[]{"Click this to reset all default values for this module"};
+				resetDefaults.parent = mainNode;
+				resetDefaults.group = module.group;
+				resetDefaults.name = "ResetDefaults";
+				resetDefaults.setId();
+
+				resetDefaults.addClickListener(new GuiNode.ClickListener() {
+					@Override
+					public void clicked() {
+						resetDefaults.toggled = false;
+						for (GuiNode node : GuiNode.all) {
+							if (node.id.startsWith(mainNode.id)) {
+								node.setDefaultValue();
+							}
+						}
+
+						Mod.sendMessage("Reset default settings for " + mainNode.name, false, "");
+					}
+				});
 			}
 		} catch (Exception e) {
 			System.out.println(Mod.NAME + " - Exception setting gui nodes");

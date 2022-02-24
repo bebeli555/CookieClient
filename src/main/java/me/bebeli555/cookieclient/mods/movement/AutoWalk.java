@@ -14,5 +14,6 @@ public class AutoWalk extends Mod {
     @EventHandler
     private Listener<PlayerUpdateMoveStatePostEvent> onUpdate = new Listener<>(event -> {
         mc.player.movementInput.moveForward++;
+        mc.player.movementInput.forwardKeyDown = true;
     });
 }

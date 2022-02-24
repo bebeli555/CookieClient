@@ -1,5 +1,6 @@
 package me.bebeli555.cookieclient.hud.components;
 
+import me.bebeli555.cookieclient.gui.Gui;
 import me.bebeli555.cookieclient.gui.GuiSettings;
 import me.bebeli555.cookieclient.hud.HudComponent;
 import me.bebeli555.cookieclient.utils.InventoryUtil;
@@ -11,6 +12,7 @@ import net.minecraft.item.ItemStack;
 public class ArmorComponent extends HudComponent {
 	public ArmorComponent() {
 		super(HudCorner.NONE, "Armor");
+		this.applyScaling = false;
 	}
 
 	@Override
@@ -50,16 +52,7 @@ public class ArmorComponent extends HudComponent {
 	}
 	
 	public static double getScale() {
-		double scale = 1;
 		ScaledResolution resolution = new ScaledResolution(mc);
-		if (resolution.getScaleFactor() == 4) {
-			scale = 2;
-		} else if (resolution.getScaleFactor() == 1) {
-			scale = 0.5;
-		} else if (resolution.getScaleFactor() == 3) {
-			scale = 1.5;
-		}
-		
-		return scale;
+		return (double)resolution.getScaleFactor() / (double)2;
 	}
 }

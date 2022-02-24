@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import me.bebeli555.cookieclient.Mod;
+import me.bebeli555.cookieclient.gui.GuiSettings;
 import me.bebeli555.cookieclient.hud.components.ArmorComponent;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
@@ -15,6 +16,7 @@ public class HudComponent extends Mod {
 	public HudCorner corner;
 	public int xAdd, yAdd;
 	public String name;
+	public boolean applyScaling = true;
 	public ArrayList<HudPoint> renderedPoints = new ArrayList<HudPoint>();
 	public static ChatFormatting w = ChatFormatting.WHITE;
 	public static ChatFormatting g = ChatFormatting.GRAY;
@@ -41,22 +43,17 @@ public class HudComponent extends Mod {
 		int plus = mc.fontRenderer.FONT_HEIGHT;
 		int minus = -3;
 		double scale = ArmorComponent.getScale();
-		renderedPoints.add(new HudPoint((x + xAdd - minus) * (float)scale, (y + yAdd - minus) * (float)scale, (x + xAdd + plus - minus) * (float)scale, (y + yAdd + plus - minus) * (float)scale));
+		renderedPoints.add(new HudPoint((float)(((x + xAdd - minus) * (float)scale) / (1 + GuiSettings.hudScale.doubleValue())),
+				(float)(((y + yAdd - minus) * (float)scale) / (1 + GuiSettings.hudScale.doubleValue())),
+				(float)(((x + xAdd + plus - minus) * (float)scale) / (1 + GuiSettings.hudScale.doubleValue())),
+				(float)(((y + yAdd + plus - minus) * (float)scale) / (1 + GuiSettings.hudScale.doubleValue()))));
 		mc.getRenderItem().renderItemOverlays(fontRenderer, itemStack, x + xAdd, y + yAdd);
 	}
 	
 	public void drawString(String text, float x, float y, int color, boolean shadow) {
-		int displayWidth = mc.displayWidth / 2;
-		int displayHeight = mc.displayHeight / 2;
-		
-		//The large scale fucks everything up for some reason. But every other scale works fine. So its just gonna divide it a bit
-		//Sometimes stuff just makes no sense
-		ScaledResolution sr = new ScaledResolution(mc);
-		if (sr.getScaleFactor() == 3) {
-			displayWidth /= 1.05;
-			displayHeight /= 1.05;
-		}
-		
+		int displayWidth = (int)(mc.displayWidth / (1 + GuiSettings.hudScale.doubleValue())) / 2;
+		int displayHeight = (int)(mc.displayHeight / (1 + GuiSettings.hudScale.doubleValue())) / 2;
+
 		if (corner == HudCorner.BOTTOM_RIGHT) {
 			drawString2(text, (displayWidth - 1 - mc.fontRenderer.getStringWidth(text)) + x, (displayHeight - 9) + y, color, shadow);
 		} else if (corner == HudCorner.BOTTOM_LEFT) {
