@@ -4,17 +4,24 @@ import me.bebeli555.cookieclient.Mod;
 import me.bebeli555.cookieclient.events.bus.EventHandler;
 import me.bebeli555.cookieclient.events.bus.Listener;
 import me.bebeli555.cookieclient.events.entity.AttackEntityEvent;
+import me.bebeli555.cookieclient.events.other.PacketEvent;
+import me.bebeli555.cookieclient.events.other.PacketPostEvent;
 import me.bebeli555.cookieclient.events.player.PlayerUpdateMoveStatePostEvent;
 import me.bebeli555.cookieclient.gui.Group;
 import me.bebeli555.cookieclient.gui.Mode;
 import me.bebeli555.cookieclient.gui.Setting;
 import me.bebeli555.cookieclient.mods.combat.KillAura;
+import me.bebeli555.cookieclient.mods.misc.Debug;
+import net.minecraft.network.play.client.CPacketPlayer;
+import net.minecraft.network.play.client.CPacketPlayerDigging;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 
 public class NoSlowDown extends Mod {
 	public static Setting items = new Setting(Mode.BOOLEAN, "Items", true, "Doesnt slow u down when using an item");
 		public static Setting itemsSpeed = new Setting(items, Mode.DOUBLE, "Speed", 0.2, "Higher = slower", "0.2 = no slow down");
 	public static Setting hit = new Setting(Mode.BOOLEAN, "Hit", true, "Doesn't stop u from sprinting when u hit an entity");
-		
+
 	public NoSlowDown() {
 		super(Group.MOVEMENT, "NoSlowDown", "Doesnt slow u down for certain things", "Also allows you to set the speed so you can", "Play with the values and make them work for different servers");
 	}

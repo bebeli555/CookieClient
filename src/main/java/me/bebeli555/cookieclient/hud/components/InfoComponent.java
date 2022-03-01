@@ -4,6 +4,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import me.bebeli555.cookieclient.gui.GuiSettings;
 import me.bebeli555.cookieclient.hud.HudComponent;
+import me.bebeli555.cookieclient.mods.misc.Debug;
 import me.bebeli555.cookieclient.utils.ItemUtil;
 import me.bebeli555.cookieclient.utils.PlayerUtil;
 import net.minecraft.client.Minecraft;

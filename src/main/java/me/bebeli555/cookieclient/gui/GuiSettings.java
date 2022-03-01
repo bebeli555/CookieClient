@@ -44,7 +44,7 @@ public class GuiSettings extends Mod {
 		public static Setting groupBackground = new Setting(guiSettings, Mode.TEXT, "Group background", "0x3650b57c", "The group background color");
 		public static Setting scrollAmount = new Setting(guiSettings, Mode.INTEGER, "ScrollAmount", 15, "How many things to scroll with one wheel scroll");
 		public static Setting scrollSave = new Setting(guiSettings, Mode.BOOLEAN, "ScrollSave", false, "Doesnt reset mouse scrolled position if true");
-		public static Setting infoBox = new Setting(guiSettings, Mode.BOOLEAN, "InfoBox", true, "Shows the left top info box thing");
+		public static Setting infoBox = new Setting(guiSettings, Mode.BOOLEAN, "InfoBox", false, "Shows the left top info box thing");
 		public static Setting changelog = new Setting(guiSettings, Mode.BOOLEAN, "Changelog", false, "Shows changelog in gui");
 	public static Setting prefix = new Setting(Mode.TEXT, "Prefix", "++", "The prefix for commands");
 

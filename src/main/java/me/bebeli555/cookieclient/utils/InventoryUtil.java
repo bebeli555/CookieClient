@@ -51,7 +51,7 @@ public class InventoryUtil extends Mod {
 		
 		return -1;
 	}
-	
+
 	/**
 	 * Clicks the inventory slot with given id
 	 */
@@ -59,8 +59,8 @@ public class InventoryUtil extends Mod {
 		if (id != -1) {
 			try {
 				mc.playerController.windowClick(mc.player.openContainer.windowId, getClickSlot(id), 0, ClickType.PICKUP, mc.player);
-			} catch (Exception ignored) {
-				
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -73,8 +73,8 @@ public class InventoryUtil extends Mod {
 		if (id != -1) {
 			try {
 				mc.playerController.windowClick(mc.player.openContainer.windowId, getClickSlot(id) + otherRows, 0, ClickType.PICKUP, mc.player);
-			} catch (Exception ignored) {
-				
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}

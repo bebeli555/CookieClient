@@ -12,6 +12,15 @@ public class ChangeLog extends Mod {
 	
 	public static String[] getChangeLog() {
 		String[] changelog = {
+				"version: v1.04",
+				"- InventoryMove no longer works in anvils",
+				"- Added a setting for AutoSprint to only be active when holding sprint",
+				"- Added a setting work blink to work for all packets instead of only movement",
+				"- Added Tooltips module",
+				"- Added OnlyWhenElytraFlying to Flight",
+				"- Added ArmorDropper module",
+				"- Added 2b2t burrow mode to prevent getting kicked",
+				"",
 				"version: v1.03",
 				"- Boats now work for EntitySpeed",
 				"- AutoCrystal now places on more legit block facings",

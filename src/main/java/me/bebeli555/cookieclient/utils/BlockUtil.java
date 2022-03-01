@@ -7,6 +7,7 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 
 import me.bebeli555.cookieclient.Mod;
+import me.bebeli555.cookieclient.mods.misc.Debug;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -206,7 +207,7 @@ public class BlockUtil extends Mod {
 	public static EnumFacing getLegitFacing(BlockPos pos) {
 		for (EnumFacing facing : EnumFacing.values()) {
 			Vec3d start = new Vec3d(mc.player.posX, mc.player.posY + mc.player.eyeHeight, mc.player.posZ);
-			Vec3d end = new Vec3d(pos).add(0.5, 0.499, 0.5).add(new Vec3d(facing.getDirectionVec()).scale(0.5));
+			Vec3d end = new Vec3d(pos).add(0.5, 0.499, 0.5).add(new Vec3d(facing.getDirectionVec()).scale(0.45));
 			RayTraceResult result = mc.world.rayTraceBlocks(start, end);
 			
 			if (result != null && result.getBlockPos().equals(pos)) {
@@ -267,13 +268,7 @@ public class BlockUtil extends Mod {
 	            	continue;
 	            }
 				
-				Vec3d hitVec;
-				if (item != null) {
-					hitVec = new Vec3d(pos).add(0.5, 0.5, 0.5).add(new Vec3d(side.getDirectionVec()).scale(0.5));
-				} else {
-					hitVec = new Vec3d(neighbor).add(0.5, 0.5, 0.5).add(new Vec3d(side.getDirectionVec()).scale(0.5));
-				}
-				
+				Vec3d hitVec = new Vec3d(neighbor).add(0.5, 0.5, 0.5).add(new Vec3d(side.getDirectionVec()).scale(0.5));
 				if (!dontRotate) {
 					if (spoofRotation) {
 						RotationUtil.rotateSpoof(hitVec);
@@ -285,12 +280,9 @@ public class BlockUtil extends Mod {
 				}
 				
 				mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
-		        if (item != null) {
-		        	mc.playerController.processRightClickBlock(mc.player, mc.world, pos, side, hitVec, EnumHand.MAIN_HAND);
-		        } else {
-		        	mc.playerController.processRightClickBlock(mc.player, mc.world, neighbor, side, hitVec, EnumHand.MAIN_HAND);
-		        	mc.player.swingArm(EnumHand.MAIN_HAND);
-		        }
+				mc.playerController.processRightClickBlock(mc.player, mc.world, neighbor, side, hitVec, EnumHand.MAIN_HAND);
+				Debug.debug("Placed item or block. Facing: " + side + " Pos: " + neighbor + " HitVec: " + hitVec);
+				mc.player.swingArm(EnumHand.MAIN_HAND);
 				mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
 				done(true);
 				return;

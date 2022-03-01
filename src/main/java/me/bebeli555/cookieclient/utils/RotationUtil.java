@@ -100,15 +100,19 @@ public class RotationUtil extends Mod {
     public void onTick(ClientTickEvent e) {
     	//Rotates ur yaw a little bit so minecraft will send the rotation packet next tick. Otherwise it doesnt send it if it hasent moved.
     	//You could probably do this some other way but this way theres no risk of sending extra packets and getting desynced.
-    	if (yawMinusCount < 10) {
-    		yawMinusCount++;
-        	mc.player.rotationYaw -= 0.005;
-    	} else if (yawPlusCount < 10) {
-    		yawPlusCount++;
-        	mc.player.rotationYaw += 0.005;
-    	} else {
-    		yawMinusCount = 0;
-    		yawPlusCount = 0;
-    	}
+		try {
+			if (yawMinusCount < 10) {
+				yawMinusCount++;
+				mc.player.rotationYaw -= 0.005;
+			} else if (yawPlusCount < 10) {
+				yawPlusCount++;
+				mc.player.rotationYaw += 0.005;
+			} else {
+				yawMinusCount = 0;
+				yawPlusCount = 0;
+			}
+		} catch (Exception e2) {
+			e2.printStackTrace();
+		}
     }
 }

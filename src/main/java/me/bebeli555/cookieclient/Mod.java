@@ -35,13 +35,7 @@ import me.bebeli555.cookieclient.mods.combat.Offhand;
 import me.bebeli555.cookieclient.mods.combat.PistonAura;
 import me.bebeli555.cookieclient.mods.combat.SelfWeb;
 import me.bebeli555.cookieclient.mods.combat.Surround;
-import me.bebeli555.cookieclient.mods.exploits.Burrow;
-import me.bebeli555.cookieclient.mods.exploits.LiquidInteract;
-import me.bebeli555.cookieclient.mods.exploits.MiningSpoof;
-import me.bebeli555.cookieclient.mods.exploits.NewChunks;
-import me.bebeli555.cookieclient.mods.exploits.PacketFly;
-import me.bebeli555.cookieclient.mods.exploits.PortalGodMode;
-import me.bebeli555.cookieclient.mods.exploits.Reach;
+import me.bebeli555.cookieclient.mods.exploits.*;
 import me.bebeli555.cookieclient.mods.games.Snake;
 import me.bebeli555.cookieclient.mods.games.tetris.Tetris;
 import me.bebeli555.cookieclient.mods.misc.*;
@@ -66,23 +60,7 @@ import me.bebeli555.cookieclient.mods.movement.SafeWalk;
 import me.bebeli555.cookieclient.mods.movement.Speed;
 import me.bebeli555.cookieclient.mods.movement.Step;
 import me.bebeli555.cookieclient.mods.movement.Strafe;
-import me.bebeli555.cookieclient.mods.render.AutoTrapIndicator;
-import me.bebeli555.cookieclient.mods.render.BlockVision;
-import me.bebeli555.cookieclient.mods.render.EntityESP;
-import me.bebeli555.cookieclient.mods.render.Freecam;
-import me.bebeli555.cookieclient.mods.render.FullBright;
-import me.bebeli555.cookieclient.mods.render.HoleESP;
-import me.bebeli555.cookieclient.mods.render.LiquidVision;
-import me.bebeli555.cookieclient.mods.render.NameTags;
-import me.bebeli555.cookieclient.mods.render.NoRender;
-import me.bebeli555.cookieclient.mods.render.Search;
-import me.bebeli555.cookieclient.mods.render.ShulkerPreview;
-import me.bebeli555.cookieclient.mods.render.Tracers;
-import me.bebeli555.cookieclient.mods.render.Trajectories;
-import me.bebeli555.cookieclient.mods.render.VoidESP;
-import me.bebeli555.cookieclient.mods.render.Waypoints;
-import me.bebeli555.cookieclient.mods.render.XRay;
-import me.bebeli555.cookieclient.mods.render.Zoom;
+import me.bebeli555.cookieclient.mods.render.*;
 import me.bebeli555.cookieclient.mods.world.AutoBuilder;
 import me.bebeli555.cookieclient.mods.world.AutoEnderChestMiner;
 import me.bebeli555.cookieclient.mods.world.AutoEnderpearl;
@@ -119,7 +97,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 public class Mod {
     public static final String MODID = "cookieclient";
     public static final String NAME = "CookieClient";
-    public static final String VERSION = "1.03";
+    public static final String VERSION = "1.04";
     public static final String DISCORD = "discord.gg/xSukBcyd8m";
     
     public static Minecraft mc = Minecraft.getMinecraft();
@@ -209,6 +187,7 @@ public class Mod {
     	new Reach();
     	new PortalGodMode();
     	new LiquidInteract();
+		new FreecamWithPackets();
 		
     	//Misc
     	new AntiAFK();
@@ -230,6 +209,7 @@ public class Mod {
     	new NoSound();
     	new AutoHotbar();
 		new Debug();
+		new ArmorDropper();
 		
     	//Movement
     	new AntiHunger();
@@ -253,6 +233,7 @@ public class Mod {
     	new Step();
     	new Strafe();
     	new LiquidSpeed();
+		new Tooltips();
 		
     	//Render
     	new AutoTrapIndicator();

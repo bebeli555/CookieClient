@@ -15,7 +15,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 
-version = "1.03"
+version = "1.04"
 group = "me.bebeli555.cookieclient"
 archivesBaseName = "CookieClient"
 

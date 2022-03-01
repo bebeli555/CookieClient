@@ -1,5 +1,6 @@
 package me.bebeli555.cookieclient.mods.movement;
 
+import net.minecraft.client.gui.GuiRepair;
 import org.lwjgl.input.Keyboard;
 
 import me.bebeli555.cookieclient.Mod;
@@ -19,7 +20,7 @@ public class InventoryMove extends Mod {
 	
     @EventHandler
     private Listener<PlayerUpdateMoveStatePostEvent> onKeyPress = new Listener<>(event -> {
-    	if (mc.currentScreen == null || mc.currentScreen instanceof GuiChat || mc.currentScreen instanceof GuiEditSign || mc.currentScreen instanceof GuiScreenBook) {
+    	if (mc.currentScreen == null || mc.currentScreen instanceof GuiChat || mc.currentScreen instanceof GuiEditSign || mc.currentScreen instanceof GuiScreenBook || mc.currentScreen instanceof GuiRepair) {
     		return;
     	}
     	
