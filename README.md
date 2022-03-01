@@ -1,5 +1,5 @@
 # CookieClient
-[![Discord](https://img.shields.io/discord/463752820026376202.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/xSukBcyd8m)
+[![Discord](https://img.shields.io/discord/712755445550284871.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/xSukBcyd8m)
 
 CookieClient is a utility client for anarchy servers. Its a forge mod so you need forge to run it.
 <br>
