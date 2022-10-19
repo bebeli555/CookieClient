@@ -27,7 +27,7 @@ public class VoidESP extends Mod {
 	public static Setting width = new Setting(Mode.DOUBLE, "Width", 1, "The width of the rendered lines");
 	
 	public VoidESP() {
-		super(Group.RENDER, "VoidESP", "Highlighst void holes");
+		super(Group.RENDER, "VoidESP", "Highlights void holes");
 	}
 	
     @EventHandler
