@@ -38,7 +38,6 @@ public class AutoEnderChestMiner extends Mod {
 	@Override
 	public void onDisabled() {
 		Mod.EVENT_BUS.unsubscribe(MiningUtil.miningUtil);
-		clearStatus();
 		thread = null;
 	}
 	
@@ -54,7 +53,6 @@ public class AutoEnderChestMiner extends Mod {
 			pos = getPlayerPos().add(pos.getX(), pos.getY(), pos.getZ());
 			
 			if (getBlock(pos) == Blocks.ENDER_CHEST) {
-				setStatus("Mining Enderchest");
 				MiningUtil.mine(pos, true);
 				sleep(delay.intValue());
 				return;
@@ -75,8 +73,7 @@ public class AutoEnderChestMiner extends Mod {
 		}
 
 		if (availableSpot != null) {
-			setStatus("Placing Enderchest");
-			Surround.centerMotion();
+			Surround.centerMotionFull();
 			BlockUtil.placeBlock(Blocks.ENDER_CHEST, availableSpot, true);
 			sleep(delay.intValue());
 		} else {

@@ -4,6 +4,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import me.bebeli555.cookieclient.gui.GuiSettings;
 import me.bebeli555.cookieclient.hud.HudComponent;
+import me.bebeli555.cookieclient.mods.misc.Debug;
 import me.bebeli555.cookieclient.utils.ItemUtil;
 import me.bebeli555.cookieclient.utils.PlayerUtil;
 import net.minecraft.client.Minecraft;
@@ -25,7 +26,11 @@ public class InfoComponent extends HudComponent {
 		//Render potions
 		if (GuiSettings.potions.booleanValue()) {
 			for (PotionEffect effect : mc.player.getActivePotionEffects()) {
-				String text = I18n.format(effect.getPotion().getName()) + " " + w + Potion.getPotionDurationString(effect, 1);
+				String text = I18n.format(effect.getPotion().getName());
+				if (effect.getAmplifier() > 0) {
+					text += " " + (effect.getAmplifier() + 1);
+				}
+				text += " " + w + Potion.getPotionDurationString(effect, 1);
 				if (corner == HudCorner.TOP_LEFT || corner == HudCorner.TOP_RIGHT) {
 					drawString(text, 0, amount * 10, effect.getPotion().getLiquidColor(), GuiSettings.infoShadow.booleanValue());
 				} else {

@@ -12,6 +12,7 @@ public class Flight extends Mod {
 	private static float defaultFlySpeed = -1;
 	
 	public static Setting speed = new Setting(Mode.DOUBLE, "Speed", 0.05, "Fly speed. Vanilla speed = 0.05");
+	public static Setting onlyWhenElytraFlying = new Setting(Mode.BOOLEAN, "OnlyWhenElytraFlying", false, "Only active when elytraflying");
 	
 	public Flight() {
 		super(Group.MOVEMENT, "Flight", "Allows you to fly");
@@ -23,8 +24,13 @@ public class Flight extends Mod {
     		defaultFlySpeed = mc.player.capabilities.getFlySpeed();
     	}
     	
-    	mc.player.capabilities.isFlying = true;
-    	mc.player.capabilities.setFlySpeed((float)speed.doubleValue());
+		if (onlyWhenElytraFlying.booleanValue() && !mc.player.isElytraFlying()) {
+			mc.player.capabilities.isFlying = false;
+			mc.player.capabilities.setFlySpeed(defaultFlySpeed);
+		} else {
+			mc.player.capabilities.isFlying = true;
+			mc.player.capabilities.setFlySpeed((float)speed.doubleValue());
+		}
     });
     
     @Override

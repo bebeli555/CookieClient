@@ -32,34 +32,13 @@ import me.bebeli555.cookieclient.mods.combat.HoleFiller;
 import me.bebeli555.cookieclient.mods.combat.KillAura;
 import me.bebeli555.cookieclient.mods.combat.NoKnockback;
 import me.bebeli555.cookieclient.mods.combat.Offhand;
+import me.bebeli555.cookieclient.mods.combat.PistonAura;
 import me.bebeli555.cookieclient.mods.combat.SelfWeb;
 import me.bebeli555.cookieclient.mods.combat.Surround;
-import me.bebeli555.cookieclient.mods.exploits.Burrow;
-import me.bebeli555.cookieclient.mods.exploits.LiquidInteract;
-import me.bebeli555.cookieclient.mods.exploits.MiningSpoof;
-import me.bebeli555.cookieclient.mods.exploits.NewChunks;
-import me.bebeli555.cookieclient.mods.exploits.PacketFly;
-import me.bebeli555.cookieclient.mods.exploits.PortalGodMode;
-import me.bebeli555.cookieclient.mods.exploits.Reach;
+import me.bebeli555.cookieclient.mods.exploits.*;
 import me.bebeli555.cookieclient.mods.games.Snake;
 import me.bebeli555.cookieclient.mods.games.tetris.Tetris;
-import me.bebeli555.cookieclient.mods.misc.AntiAFK;
-import me.bebeli555.cookieclient.mods.misc.AutoEat;
-import me.bebeli555.cookieclient.mods.misc.AutoFirework;
-import me.bebeli555.cookieclient.mods.misc.AutoInventoryManager;
-import me.bebeli555.cookieclient.mods.misc.AutoMend;
-import me.bebeli555.cookieclient.mods.misc.AutoMessager;
-import me.bebeli555.cookieclient.mods.misc.AutoReconnect;
-import me.bebeli555.cookieclient.mods.misc.ChestSwap;
-import me.bebeli555.cookieclient.mods.misc.DiscordRPC;
-import me.bebeli555.cookieclient.mods.misc.FakePlayer;
-import me.bebeli555.cookieclient.mods.misc.Friends;
-import me.bebeli555.cookieclient.mods.misc.MiddleClickFriends;
-import me.bebeli555.cookieclient.mods.misc.NoSound;
-import me.bebeli555.cookieclient.mods.misc.PacketCanceller;
-import me.bebeli555.cookieclient.mods.misc.UpdateChecker;
-import me.bebeli555.cookieclient.mods.misc.VisualRange;
-import me.bebeli555.cookieclient.mods.misc.XCarry;
+import me.bebeli555.cookieclient.mods.misc.*;
 import me.bebeli555.cookieclient.mods.movement.AntiHunger;
 import me.bebeli555.cookieclient.mods.movement.AntiLevitation;
 import me.bebeli555.cookieclient.mods.movement.AutoSprint;
@@ -81,27 +60,13 @@ import me.bebeli555.cookieclient.mods.movement.SafeWalk;
 import me.bebeli555.cookieclient.mods.movement.Speed;
 import me.bebeli555.cookieclient.mods.movement.Step;
 import me.bebeli555.cookieclient.mods.movement.Strafe;
-import me.bebeli555.cookieclient.mods.render.AutoTrapIndicator;
-import me.bebeli555.cookieclient.mods.render.BlockVision;
-import me.bebeli555.cookieclient.mods.render.EntityESP;
-import me.bebeli555.cookieclient.mods.render.Freecam;
-import me.bebeli555.cookieclient.mods.render.FullBright;
-import me.bebeli555.cookieclient.mods.render.HoleESP;
-import me.bebeli555.cookieclient.mods.render.LiquidVision;
-import me.bebeli555.cookieclient.mods.render.NameTags;
-import me.bebeli555.cookieclient.mods.render.NoRender;
-import me.bebeli555.cookieclient.mods.render.Search;
-import me.bebeli555.cookieclient.mods.render.ShulkerPreview;
-import me.bebeli555.cookieclient.mods.render.Tracers;
-import me.bebeli555.cookieclient.mods.render.Trajectories;
-import me.bebeli555.cookieclient.mods.render.VoidESP;
-import me.bebeli555.cookieclient.mods.render.Waypoints;
-import me.bebeli555.cookieclient.mods.render.XRay;
-import me.bebeli555.cookieclient.mods.render.Zoom;
+import me.bebeli555.cookieclient.mods.render.*;
 import me.bebeli555.cookieclient.mods.world.AutoBuilder;
 import me.bebeli555.cookieclient.mods.world.AutoEnderChestMiner;
+import me.bebeli555.cookieclient.mods.world.AutoEnderpearl;
 import me.bebeli555.cookieclient.mods.world.AutoFish;
 import me.bebeli555.cookieclient.mods.world.AutoRespawn;
+import me.bebeli555.cookieclient.mods.world.AutoSign;
 import me.bebeli555.cookieclient.mods.world.AutoTool;
 import me.bebeli555.cookieclient.mods.world.CrystalBlock;
 import me.bebeli555.cookieclient.mods.world.FastUse;
@@ -132,7 +97,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 public class Mod {
     public static final String MODID = "cookieclient";
     public static final String NAME = "CookieClient";
-    public static final String VERSION = "1.02-beta";
+    public static final String VERSION = "1.04";
     public static final String DISCORD = "discord.gg/xSukBcyd8m";
     
     public static Minecraft mc = Minecraft.getMinecraft();
@@ -212,6 +177,7 @@ public class Mod {
     	new SelfWeb();
     	new Surround();
     	new Offhand();
+    	new PistonAura();
     	
     	//Exploits
     	new Burrow();
@@ -221,6 +187,7 @@ public class Mod {
     	new Reach();
     	new PortalGodMode();
     	new LiquidInteract();
+		new FreecamWithPackets();
 		
     	//Misc
     	new AntiAFK();
@@ -231,7 +198,7 @@ public class Mod {
     	new AutoMessager();
     	new AutoReconnect();
     	new ChestSwap();
-    	new DiscordRPC();
+    	//try {new DiscordRPC();} catch(UnsatisfiedLinkError e) {}
     	new FakePlayer();
     	new Friends();
     	new MiddleClickFriends();
@@ -240,6 +207,9 @@ public class Mod {
     	new VisualRange();
     	new XCarry();
     	new NoSound();
+    	new AutoHotbar();
+		new Debug();
+		new ArmorDropper();
 		
     	//Movement
     	new AntiHunger();
@@ -263,6 +233,7 @@ public class Mod {
     	new Step();
     	new Strafe();
     	new LiquidSpeed();
+		new Tooltips();
 		
     	//Render
     	new AutoTrapIndicator();
@@ -298,6 +269,8 @@ public class Mod {
     	new AutoTool();
     	new AutoRespawn();
     	new StashLogger();
+    	new AutoEnderpearl();
+    	new AutoSign();
 		
     	//Games
 		new Snake();
@@ -345,27 +318,37 @@ public class Mod {
     /**
      * Sends a clientSided message
      * @param red if true then message will be red if false then it will be some other color
-     * @param name of the module it will add in the message
-     * @param remove removes all the past messages made by the mod if true
+     * @param text of the module it will add in the message
+     * @param red renders text as red
      */
     public void sendMessage(String text, boolean red) {
-    	if (mc.player == null) {
-    		return;
-    	}
-
-    	//Send message
-    	String module = "";
-    	ChatFormatting color = ChatFormatting.WHITE;
-    	if (red) {
-    		color = ChatFormatting.RED;
-    	}
-    	if (!name.isEmpty()) {
-    		module = "-" + name;
-    	}
-    	
-    	mc.player.sendMessage(new TextComponentString(ChatFormatting.GREEN + "[" + ChatFormatting.LIGHT_PURPLE + NAME + module + ChatFormatting.GREEN + "] " + color + text));
+		sendMessage(text, red, name);
     }
-    
+
+	/**
+	 * Sends a clientSided message
+	 * @param text of the module it will add in the message
+	 * @param red renders text as red
+	 * @param moduleName module name to send in message
+	 */
+	public static void sendMessage(String text, boolean red, String moduleName) {
+		if (mc.player == null) {
+			return;
+		}
+
+		//Send message
+		String module = "";
+		ChatFormatting color = ChatFormatting.WHITE;
+		if (red) {
+			color = ChatFormatting.RED;
+		}
+		if (!moduleName.isEmpty()) {
+			module = "-" + moduleName;
+		}
+
+		mc.player.sendMessage(new TextComponentString(ChatFormatting.GREEN + "[" + ChatFormatting.LIGHT_PURPLE + NAME + module + ChatFormatting.GREEN + "] " + color + text));
+	}
+
     public int getRenderNumber() {
     	return this.renderNumber;
     }
@@ -522,7 +505,6 @@ public class Mod {
 		Renderer.status = null;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static void suspend(Thread thread) {
 		if (thread != null) thread.suspend();
 	}

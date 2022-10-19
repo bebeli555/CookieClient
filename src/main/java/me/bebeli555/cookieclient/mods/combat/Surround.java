@@ -22,6 +22,8 @@ public class Surround extends Mod {
 	public static Setting center = new Setting(Mode.BOOLEAN, "Center", true, "Center before so it can place all the blocks");
 		public static Setting centerMode = new Setting(center, "Mode", "Motion", new String[]{"Motion"}, new String[]{"Teleport"});
 	public static Setting toggle = new Setting(Mode.BOOLEAN, "Toggle", false, "Toggles it off when there is no blocks to place");
+	public static Setting toggleOnSneak = new Setting(Mode.BOOLEAN, "ToggleOnSneak", false, "Only makes it work when ur sneaking");
+	public static Setting toggleOnJump = new Setting(Mode.BOOLEAN, "ToggleOnJump", false, "Toggles surround off when u jump");
 	
 	public Surround() {
 		super(Group.COMBAT, "Surround", "Surrounds your feet with obsidian", "Useful for blocking crystal damage");
@@ -40,13 +42,18 @@ public class Surround extends Mod {
 
     @EventHandler
     private Listener<PlayerMotionUpdateEvent> onMotionUpdate = new Listener<>(p_Event -> {
-		if (mc.player == null) {
+		if (mc.player == null || !mc.gameSettings.keyBindSneak.isKeyDown() && toggleOnSneak.booleanValue()) {
 			return;
 		}
 		
 		if (!InventoryUtil.hasBlock(Blocks.OBSIDIAN)) {
 			disable();
 			sendMessage("You need obsidian", true);
+			return;
+		}
+		
+		if (mc.gameSettings.keyBindJump.isKeyDown() && toggleOnJump.booleanValue()) {
+			disable();
 			return;
 		}
 		
@@ -65,7 +72,7 @@ public class Surround extends Mod {
 					boolean canPlace = BlockUtil.canPlaceBlock(pos);
 					boolean canPlaceBelow = BlockUtil.canPlaceBlock(pos.add(0, -1, 0));
 					
-					if (center.booleanValue() && canPlace || center.booleanValue() && canPlaceBelow) {
+					if (center.booleanValue() && !canPlace) {
 						if (centerMode.stringValue().equals("Motion") && !centerMotion()) {
 							return;
 						} else if (centerMode.stringValue().equals("Teleport")) {
@@ -92,6 +99,11 @@ public class Surround extends Mod {
 		
 		if (blocksPlaced == 0 && toggle.booleanValue()) {
 			disable();
+		} else if (blocksPlaced == 0) {
+			if (oldSlot != -1) {
+				mc.player.inventory.currentItem = oldSlot;
+				oldSlot = -1;
+			}
 		}
     });
 	
@@ -107,6 +119,24 @@ public class Surround extends Mod {
 		mc.player.motionX = (centerPos[0] - mc.player.posX) / 2;
 		mc.player.motionZ = (centerPos[2] - mc.player.posZ) / 2;
 		return false;
+	}
+	
+	/**
+	 * Centers the player fully in one call. Needs to be called on a new thread because it sleeps
+	 */
+	public static void centerMotionFull() {
+		if (isCentered()) {
+			return;
+		}
+		
+		double[] centerPos = {Math.floor(mc.player.posX) + 0.5, Math.floor(mc.player.posY), Math.floor(mc.player.posZ) + 0.5};
+		
+		mc.player.motionX = (centerPos[0] - mc.player.posX) / 2;
+		mc.player.motionZ = (centerPos[2] - mc.player.posZ) / 2;
+		
+		sleepUntil(() -> Math.abs(centerPos[0] - mc.player.posX) <= 0.1 && Math.abs(centerPos[2] - mc.player.posZ) <= 0.1, 1000);
+		mc.player.motionX = 0;
+		mc.player.motionZ = 0;
 	}
 	
 	/**

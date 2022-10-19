@@ -101,7 +101,11 @@ public class Setting {
 			try {
 				return Integer.parseUnsignedInt(((String)value).replace("0x", ""), 16);
 			} catch (Exception e2) {
-				return Integer.parseUnsignedInt(((String)defaultValue).replace("0x", ""), 16);
+				try {
+					return Integer.parseUnsignedInt(((String)defaultValue).replace("0x", ""), 16);
+				} catch (Exception e3) {
+					return -1;
+				}
 			}
 		}
 	}
@@ -122,7 +126,15 @@ public class Setting {
 		try {
 			return (double)value;
 		} catch (Exception e) {
-			return (int)value;
+			try {
+				return (int)value;
+			} catch (Exception e2) {
+				try {
+					return (double)defaultValue;
+				} catch (Exception e3) {
+					return -1;
+				}
+			}
 		}
 	}
 	

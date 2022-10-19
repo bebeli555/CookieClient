@@ -12,11 +12,12 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 
 public class Offhand extends Mod {
-	private boolean autoTotem;
+	public static boolean autoTotem, toggleBackOn;
 	public static Offhand instance;
 	
 	public static Setting mode = new Setting(null, "Mode", "Gap", new String[]{"Gap"}, new String[]{"Crystal"}, new String[]{"Bow"}, new String[]{"XP"});
 	public static Setting toggleHealth = new Setting(Mode.DOUBLE, "ToggleHealth", 5, "When your health goes below or equal to this amount", "It will toggle this off and enabled autototem", "If you had it on previously");
+	public static Setting toggleBack = new Setting(Mode.BOOLEAN, "ToggleBack", false, "If offhand gets toggled off because low health", "Then it will toggle it back on when", "Health is above the set amount above");
 	
 	public Offhand() {
 		super(Group.COMBAT, "Offhand", "Pauses autototem and puts something else to your offhand");
@@ -33,6 +34,7 @@ public class Offhand extends Mod {
 	
 	@Override
 	public void onDisabled() {
+		toggleBackOn = false;
 		if (autoTotem) {
 			AutoTotem.instance.enable();
 		}
@@ -42,6 +44,7 @@ public class Offhand extends Mod {
     private Listener<PlayerUpdateEvent> onPlayerUpdate = new Listener<>(event -> {
     	if (mc.player.getHealth() + mc.player.getAbsorptionAmount() <= toggleHealth.doubleValue()) {
     		disable();
+    		toggleBackOn = toggleBack.booleanValue();
     		return;
     	}
     	

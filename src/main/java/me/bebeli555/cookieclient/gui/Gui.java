@@ -8,6 +8,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import me.bebeli555.cookieclient.mods.misc.Debug;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -64,7 +65,7 @@ public class Gui extends GuiScreen {
 		float guiScale = (float)((float)mc.displayWidth / resolution.getWidth());
 		this.setGuiSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
 		
-		guiScale = (float)getGuiScale(guiScale);
+		guiScale = (float)getGuiScale(guiScale) + (float)GuiSettings.scale.doubleValue();
 		final int mouseX = (int)(mouseX2 / guiScale);
 		final int mouseY = (int)(mouseY2 / guiScale);
 		
@@ -571,7 +572,8 @@ public class Gui extends GuiScreen {
 			MinecraftForge.EVENT_BUS.unregister(gui);
 		}
 	}
-	
+
+	//Theres probably a formula for calculating this but idk
 	public static double getGuiScale(float start) {
 		ScaledResolution scaledResolution = new ScaledResolution(mc);
 		if (scaledResolution.getScaleFactor() == 4) {
@@ -579,9 +581,11 @@ public class Gui extends GuiScreen {
 		} else if (scaledResolution.getScaleFactor() == 1) {
 			start += 1 * start;
 		} else if (scaledResolution.getScaleFactor() == 3) {
-			start += -0.3 * start;
+			start += -0.3335 * start;
+		} else if (scaledResolution.getScaleFactor() == 6) {
+			start += -0.6669 * start;
 		}
-		
+
 		return start;
 	}
 	

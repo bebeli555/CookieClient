@@ -155,7 +155,7 @@ public class ObbyBuilderBot extends Mod {
 			if (bestPos.getY() > 255) {
 				setStatus("Walking closer to location where to grind echests");
 				BaritoneUtil.walkTo(bestPos.add(-2, 0, 0), true);
-				Surround.centerMotion();
+				Surround.centerMotionFull();
 				
 				BlockPos[] breakPositions = new BlockPos[]{bestPos.add(0, -1, 0), bestPos.add(0, -1, 1), bestPos.add(-1, -1, 0), bestPos.add(-1, -1, 1)};
 				setStatus("Mining area to place echests on");
@@ -220,7 +220,7 @@ public class ObbyBuilderBot extends Mod {
 				if (!getPlayerPos().equals(bestPos) || !Surround.isCentered()) {
 					setStatus("Walking to position");
 					BaritoneUtil.walkTo(bestPos, true);
-					Surround.centerMotion();
+					Surround.centerMotionFull();
 				}
 				
 				//Place and destroy echests
@@ -232,7 +232,7 @@ public class ObbyBuilderBot extends Mod {
 						Mod.sleep(300);
 					} else {
 						setStatus("Placing enderchest");
-						Surround.centerMotion();
+						Surround.centerMotionFull();
 						BlockUtil.placeBlock(Blocks.ENDER_CHEST, pos, false);
 						Mod.sleep(300);
 					}

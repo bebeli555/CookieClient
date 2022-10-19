@@ -8,6 +8,9 @@ import me.bebeli555.cookieclient.events.bus.EventHandler;
 import me.bebeli555.cookieclient.events.bus.Listener;
 import me.bebeli555.cookieclient.events.other.PacketEvent;
 import me.bebeli555.cookieclient.gui.Group;
+import me.bebeli555.cookieclient.gui.Mode;
+import me.bebeli555.cookieclient.gui.Setting;
+import me.bebeli555.cookieclient.mods.misc.Debug;
 import me.bebeli555.cookieclient.rendering.RenderUtil;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.network.Packet;
@@ -16,6 +19,8 @@ import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.math.Vec3d;
 
 public class Blink extends Mod {
+	public static Setting allPackets = new Setting(Mode.BOOLEAN, "AllPackets", false, "If true then it will apply for all packets instead of only movement packets");
+
 	private static EntityOtherPlayerMP original;
 	private static ArrayList<Packet<?>> packets = new ArrayList<Packet<?>>();
 	private static ArrayList<Vec3d> lines = new ArrayList<Vec3d>();
@@ -41,16 +46,19 @@ public class Blink extends Mod {
                 mc.getConnection().sendPacket(packets.get(0));
                 packets.remove(0);
             }
+
+			if (original != null) {
+				mc.world.removeEntity(original);
+			}
         }
-        
-        mc.world.removeEntity(original);
+
         packets.clear();
         lines.clear();
 	}
 	
     @EventHandler
     private Listener<PacketEvent> packetEvent = new Listener<>(event -> {
-        if (event.packet instanceof CPacketPlayer || event.packet instanceof CPacketConfirmTeleport) {
+        if (event.packet instanceof CPacketPlayer || event.packet instanceof CPacketConfirmTeleport || (allPackets.booleanValue() && event.packet.toString().contains("CPacket"))) {
         	event.cancel();
             packets.add(event.packet);
             

@@ -29,6 +29,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 public class Scaffold extends Mod {
 	private static Timer towerTimer = new Timer();
 	private static int counter, counter2;
+	private static int lastSlot = -1;
 	
 	public static Setting safeWalk = new Setting(Mode.BOOLEAN, "UseSafeWalk", true, "Uses safewalk module so you dont fall off");
 	public static Setting tower = new Setting(Mode.BOOLEAN, "Tower", true, "Bridge up fast");
@@ -43,6 +44,10 @@ public class Scaffold extends Mod {
 	public void onDisabled() {
 		RotationUtil.stopRotating();
 		SafeWalk.instance.setHiddenOn(false);
+		if (lastSlot != -1) {
+			mc.player.inventory.currentItem = lastSlot;
+		}
+		lastSlot = -1;
 	}
 	
 	@SubscribeEvent
@@ -90,6 +95,10 @@ public class Scaffold extends Mod {
 			sendMessage("You dont have any blocks", true);
 			disable();
 			return;
+		}
+		
+		if (mc.player.inventory.currentItem != slot) {
+			lastSlot = mc.player.inventory.currentItem;
 		}
 		
 		BlockUtil.Place place = new BlockUtil.Place(null, Block.getBlockFromItem(InventoryUtil.getItemStack(slot).getItem()), pos, true);

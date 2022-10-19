@@ -1,14 +1,5 @@
 package me.bebeli555.cookieclient.mods.combat;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
-
 import me.bebeli555.cookieclient.Mod;
 import me.bebeli555.cookieclient.events.bus.EventHandler;
 import me.bebeli555.cookieclient.events.bus.Listener;
@@ -17,14 +8,10 @@ import me.bebeli555.cookieclient.events.other.PacketEvent;
 import me.bebeli555.cookieclient.gui.Group;
 import me.bebeli555.cookieclient.gui.Mode;
 import me.bebeli555.cookieclient.gui.Setting;
+import me.bebeli555.cookieclient.mods.misc.Debug;
 import me.bebeli555.cookieclient.mods.misc.Friends;
 import me.bebeli555.cookieclient.rendering.RenderUtil;
-import me.bebeli555.cookieclient.utils.BlockUtil;
-import me.bebeli555.cookieclient.utils.CrystalUtil;
-import me.bebeli555.cookieclient.utils.EntityUtil;
-import me.bebeli555.cookieclient.utils.InventoryUtil;
-import me.bebeli555.cookieclient.utils.RotationUtil;
-import me.bebeli555.cookieclient.utils.Timer;
+import me.bebeli555.cookieclient.utils.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -49,8 +36,16 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
-//The base for this AutoCrystal is from salhack or spidermod.
-//Just improved a bit
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
+
+//The base for this AutoCrystal is from salhack or spidermod and improved by me.
 public class AutoCrystal extends Mod {
     public static Timer removeVisualTimer = new Timer();
     public static List<BlockPos> placedCrystals = new CopyOnWriteArrayList<>();
@@ -67,19 +62,19 @@ public class AutoCrystal extends Mod {
 	public static Setting neutrals = new Setting(Mode.BOOLEAN, "Neutrals", false, "Attacks neutral entities like enderman");
 	public static Setting passive = new Setting(Mode.BOOLEAN, "Passive", false, "Attacks passive entities like animals");
     public static Setting breakMode = new Setting(null, "BreakMode", "OnlyOwn", new String[]{"Always"}, new String[]{"OnlyOwn"});
-    public static Setting placeRadius = new Setting(Mode.DOUBLE, "PlaceRadius", 5.5, "Radius for placing");
-    public static Setting breakRadius = new Setting(Mode.DOUBLE, "BreakRadius", 5.5, "Radius for breaking");
-    public static Setting wallsRange = new Setting(Mode.DOUBLE, "WallsRange", 3.5, "Max distance through walls");
+    public static Setting placeRadius = new Setting(Mode.DOUBLE, "PlaceRadius", 4, "Radius for placing");
+    public static Setting breakRadius = new Setting(Mode.DOUBLE, "BreakRadius", 4.4, "Radius for breaking");
+    public static Setting wallsRange = new Setting(Mode.DOUBLE, "WallsRange", 3, "Max distance through walls");
     public static Setting multiPlace = new Setting(Mode.BOOLEAN, "MultiPlace", false, "Tries to multiplace");
-    public static Setting ticks = new Setting(Mode.INTEGER, "Ticks", 2, "The number of ticks to ignore on client update");
-    public static Setting minDmg = new Setting(Mode.DOUBLE, "MinDMG", 6, "Minimum damage to do to your opponent");
+    public static Setting ticks = new Setting(Mode.INTEGER, "Ticks", 4, "The number of ticks to ignore on client update");
+    public static Setting minDmg = new Setting(Mode.DOUBLE, "MinDMG", 5, "Minimum damage to do to your opponent");
     public static Setting maxSelfDmg = new Setting(Mode.DOUBLE, "MaxSelfDMG", 13, "Max self damage allowed");
     public static Setting facePlace = new Setting(Mode.DOUBLE, "FacePlace", 9, "Required target health for faceplacing");
     public static Setting autoSwitch = new Setting(Mode.BOOLEAN, "AutoSwitch", true, "Automatically switches to crystals in your hotbar");
     	public static Setting autoSwitchReplace = new Setting(autoSwitch, Mode.BOOLEAN, "Replace", false, "If hotbar has no crystals then it puts crystals to", "Ur hotbar if ur inventory has crystals");
     public static Setting pauseIfHittingBlock = new Setting(Mode.BOOLEAN, "PauseIfHittingBlock", false, "Pauses when your hitting a block with a pickaxe");
     public static Setting pauseWhileEating = new Setting(Mode.BOOLEAN, "PauseWhileEating", false, "Pauses while eating");
-    public static Setting noSuicide = new Setting(Mode.BOOLEAN, "NoSuicide", true, "Doesn't commit suicide/pop if you are going to take fatal damage from self placed crystal");
+    public static Setting noSuicide = new Setting(Mode.BOOLEAN, "NoSuicide", false, "Doesn't commit suicide/pop if you are going to take fatal damage from self placed crystal");
     public static Setting antiWeakness = new Setting(Mode.BOOLEAN, "AntiWeakness", true, "Switches to a sword to try and break crystals");
     public static Setting extraRotatePackets = new Setting(Mode.BOOLEAN, "ExtraRotatePackets", false, "Sends a rotation packet every rotation", "Having this on will not work on most servers");
     public static Setting renderFillBox = new Setting(Mode.BOOLEAN, "RenderFillBox", true, "Renders filled box around place / break spot");
@@ -113,28 +108,39 @@ public class AutoCrystal extends Mod {
     });
 
     private boolean validateCrystal(EntityEnderCrystal e) {
-        if (e == null || e.isDead) {
+        if (e == null) {
+            Debug.debug("Crystal isnt valid because its null");
             return false;
         }
-        
+
+        if (e.isDead) {
+            Debug.debug("Crystal isnt valid because its dead");
+            return false;
+        }
+
         if (attackedCrystals.containsKey(e) && attackedCrystals.get(e) > 5) {
+            Debug.debug("Crystal isnt valid because it has been attacked too many times");
             return false;
         }
         
         if (e.getDistance(mc.player) > (!mc.player.canEntityBeSeen(e) ? wallsRange.doubleValue() : breakRadius.doubleValue())) {
+            Debug.debug("Crystal isnt valid because its too far away for walls or break range");
             return false;
         }
 
         //Return false is selfDamage is more than allowed self damage or breaking it would kill or pop us and NoSuicide is on
         float selfDamage = CrystalUtil.calculateDamage(new Vec3d(e.posX, e.posY, e.posZ), mc.player);
         if (selfDamage > maxSelfDmg.doubleValue() || noSuicide.booleanValue() && selfDamage >= mc.player.getHealth() + mc.player.getAbsorptionAmount()) {
+            Debug.debug("Crystal isnt valid because it would do more damage than maxSelfDmg or no suicide is on and it would kill us");
             return false;
         }
         
         if (breakMode.stringValue().equals("OnlyOwn")) {
+            Debug.debug("Crystal may or may not be valid because breakMode is OnlyOwn");
         	return placedCrystals.contains(e.getPosition().add(0, -1, 0));
         }
-        
+
+        Debug.debug("Crystal is valid");
         return true;
     }
     
@@ -290,6 +296,7 @@ public class AutoCrystal extends Mod {
                         damage = calculatedDamage;
                         if (!placeLocations.contains(pos)) {
                             placeLocations.add(pos);
+                            Debug.debug("Added place location: " + pos);
                         }
                         
                         target = entity;
@@ -321,6 +328,7 @@ public class AutoCrystal extends Mod {
                         //Remove if this doesnt
                         if (calculatedDamage < minDamage) {
                             placeLocations.remove(pos);
+                            Debug.debug("Removed place location: " + pos);
                         }
                     }
                     
@@ -335,9 +343,10 @@ public class AutoCrystal extends Mod {
         EntityEnderCrystal crystal = getNearestCrystalTo(mc.player);
         
         //Get a valid crystal in range, and check if it's in break radius
-        boolean isValidCrystal = crystal != null ? mc.player.getDistance(crystal) < breakRadius.doubleValue() : false;
+        boolean isValidCrystal = crystal != null;
         if (!isValidCrystal && placeLocations.isEmpty()) {
             remainingTicks = 0;
+            Debug.debug("Crystal isnt valid and placeLocations are empty. Returned");
             return;
         }
         
@@ -381,11 +390,14 @@ public class AutoCrystal extends Mod {
             mc.playerController.attackEntity(mc.player, crystal);
             mc.player.swingArm(EnumHand.MAIN_HAND);
             addAttackedCrystal(crystal);
-            
+            Debug.debug("Attacked crystal at: " + crystal);
+
             //If we are not multiplacing return here, we have something to do for this tick.
             if (!multiPlace.booleanValue()) {
                 return;
             }
+        } else {
+            Debug.debug("Didnt attack crystal because it isnt valid");
         }
         
         //Verify the placeTimer is ready, selectedPosition is not 0,0,0 and the event isn't already cancelled
@@ -402,6 +414,7 @@ public class AutoCrystal extends Mod {
             
             //Nothing found... this is bad, wait for next tick to correct it
             if (selectedPos == null) {
+                Debug.debug("Nothing found");
                 remainingTicks = 0;
                 return;
             }
@@ -427,7 +440,10 @@ public class AutoCrystal extends Mod {
             placePos = selectedPos;
             breakPos = null;
             lastPlaceOrBreak.reset();
-            mc.getConnection().sendPacket(new CPacketPlayerTryUseItemOnBlock(selectedPos, getFacing(selectedPos), mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, 0, 0, 0));
+            EnumFacing facing = getFacing(selectedPos);
+            EnumHand hand = mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND;
+            Debug.debug("Placing crystal. Facing: " + facing + " Hand: " + hand + " Pos: " + selectedPos);
+            mc.getConnection().sendPacket(new CPacketPlayerTryUseItemOnBlock(selectedPos, facing, hand, 0, 0, 0));
             
             placedCrystals.add(selectedPos);
             placeLocations.clear();
@@ -492,31 +508,35 @@ public class AutoCrystal extends Mod {
      * Gets the best legit facing for the blockpos for placing something on it
      */
     public static EnumFacing getFacing(BlockPos pos) {
-    	double closest = Integer.MAX_VALUE;
-    	EnumFacing best = null;
-    	for (EnumFacing facing : EnumFacing.values()) {
-    		Vec3d vec = new Vec3d(pos).add(0.5, 0.5, 0.5).add(new Vec3d(facing.getDirectionVec()).scale(0.5));
-    		BlockPos neighbor = pos.offset(facing);
-    		
-    		if (!isSolid(neighbor)) {
-    			double distance = vec.distanceTo(new Vec3d(mc.player.posX, mc.player.posY, mc.player.posZ));
-    			if (best == null || distance < closest) {
-    				closest = distance;
-    				best = facing;
-    			}
-    		}
-    	}
-    	
-    	if (best != null) {
-    		return best;
-    	} else {
-    		RayTraceResult result = mc.world.rayTraceBlocks(new Vec3d(mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ), new Vec3d(pos.getX() + 0.5, pos.getY() - 0.5, pos.getZ() + 0.5));
-    		if (result != null && result.getBlockPos() != null) {
-    			return result.sideHit;
-    		} else {
-    			return EnumFacing.UP;
-    		}
-    	}
+        //First calculate if any facing is possible to be looked at if it is then return it as its a legit facing
+        for (EnumFacing facing : EnumFacing.values()) {
+            Vec3d vec = new Vec3d(pos).add(0.5, 0.5, 0.5).add(new Vec3d(facing.getDirectionVec()).scale(0.45));
+            RayTraceResult result = mc.world.rayTraceBlocks(new Vec3d(mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ), vec);
+
+            if (result != null && result.getBlockPos().equals(pos) && result.sideHit != null && result.sideHit.equals(facing)) {
+                Debug.debug("Found best facing with ray tracing: " + facing);
+                return facing;
+            }
+        }
+
+        //If no facing is possible to be directly looked at then return the best facing that isnt blocked by another block
+        double closest = Integer.MAX_VALUE;
+        EnumFacing best = null;
+        for (EnumFacing facing : EnumFacing.values()) {
+            Vec3d vec = new Vec3d(pos).add(0.5, 0.5, 0.5).add(new Vec3d(facing.getDirectionVec()).scale(0.5));
+            BlockPos neighbor = pos.offset(facing);
+
+            if (!isSolid(neighbor)) {
+                double distance = vec.distanceTo(new Vec3d(mc.player.posX, mc.player.posY, mc.player.posZ));
+                if (best == null || distance < closest) {
+                    closest = distance;
+                    best = facing;
+                }
+            }
+        }
+
+        Debug.debug("No ray tracing facing found. Best: " + best);
+        return best;
     }
     
     public void rotate(Vec3d vec) {

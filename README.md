@@ -1,20 +1,21 @@
 # CookieClient
-[![Discord](https://img.shields.io/discord/463752820026376202.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/xSukBcyd8m)
+[![Discord](https://img.shields.io/discord/712755445550284871.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/xSukBcyd8m)
 
 CookieClient is a utility client for anarchy servers. Its a forge mod so you need forge to run it.
 <br>
 Currently supported versions: 1.12.2
 <br>
 <br>
-CookieClient is currently in BETA so it might have a bit of bugs and crashes. Remember to report them so they can be fixed!
+Default prefix = `++`
+<br>
+You can open GUI with `++gui` command and then later bind it to some key in GUI > Keybind
 <br>
 
 # Downloading
-You can download CookieClient at the [releases](https://github.com/bebeli555/CookieClient/releases) tab. And select the latest version and download the `CookieClient-version-release.jar`. Then put the jar file to your mods folder and run minecraft with forge. You can also download it from the discord server or by building it yourself with the instructions below.
-<br>
+You can download CookieClient at the [releases](https://github.com/bebeli555/CookieClient/releases) tab. And select the latest version and download the `CookieClient-version-release.jar`. Then put the jar file to your mods folder and run minecraft with forge. You can also build it yourself with the instructions below.
 
 # Building
-You can build the project by running `gradlew setupDecompWorkspace` and `gradlew build`. If your using eclipse you also need to run `gradlew eclipse`. And for IntelliJ you need to run `gradlew genIntellijRuns`
+You can build the project and set the development environment by running `gradlew eclipse` and `gradlew genEclipseRuns` then `gradlew build` or in intellij just by running `gradlew genIntellijRuns` then `gradlew build` If you just want to build it without setting up IDE environment then just run `gradlew build` then the built jar will be in build/libs. You need JDK 8 to build it newer versions of java wont work i think.
 <br>
 
 # Contributing

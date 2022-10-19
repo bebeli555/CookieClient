@@ -85,7 +85,7 @@ public class ElytraBot extends Mod {
 		
 		if (!coordinates.booleanValue()) {
 			//Calculate the direction so it will put it to diagonal if the player is on diagonal highway.
-			if (Math.abs(mc.player.posX - mc.player.posZ) <= 5 && Math.abs(mc.player.posX) > 10 && Math.abs(mc.player.posZ) > 10 && mode.stringValue().equals("Highway")) {
+			if (Math.abs(Math.abs(mc.player.posX) - Math.abs(mc.player.posZ)) <= 5 && Math.abs(mc.player.posX) > 10 && Math.abs(mc.player.posZ) > 10 && mode.stringValue().equals("Highway")) {
 				direction = Direction.getDiagonalDirection();
 			} else {
 				direction = Direction.getDirection();
@@ -221,7 +221,7 @@ public class ElytraBot extends Mod {
 			if (isSolid(getPlayerPos().add(0, 2, 0)) && mode.stringValue().equals("Tunnel")) {
 				if (getBlock(getPlayerPos().add(0, 2, 0)) != Blocks.BEDROCK) {
 					setStatus("Mining above block so we can takeoff");
-					Surround.centerMotion();
+					Surround.centerMotionFull();
 					MiningUtil.mineAnyway(getPlayerPos().add(0, 2, 0), false);
 				} else {
 					if (useBaritone.booleanValue()) {

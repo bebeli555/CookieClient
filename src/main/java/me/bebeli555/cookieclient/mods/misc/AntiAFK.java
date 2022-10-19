@@ -65,8 +65,8 @@ public class AntiAFK extends Mod {
 	
 	public static void doAction(int id) {
 		if (id == 1) {
-			mc.player.rotationYaw = random(0, 180);
-			mc.player.rotationPitch = random(0, 180);
+			mc.player.rotationYaw = random(0, 170);
+			mc.player.rotationPitch = random(0, 80);
 		} else if (id == 2) {
 			mc.player.swingArm(EnumHand.MAIN_HAND);
 		} else if (id == 3) {
